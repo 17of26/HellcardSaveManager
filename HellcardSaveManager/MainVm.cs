@@ -36,7 +36,7 @@ namespace HellcardSaveManager
 
         public MainVm()
         {
-            var demoDirInfo = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Prealpha_demo"));
+            demoDirInfo = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Prealpha_demo"));
 
             BackupFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Backups"));
 
@@ -130,7 +130,9 @@ namespace HellcardSaveManager
 
         private void SendLogs()
         {
-            Trace.WriteLine("WidepeepoHappy");
+            Process.Start(@Directory.GetDirectories(demoDirInfo.FullName)[0]);
+            String[] zzz = Directory.GetDirectories(demoDirInfo.FullName);
+            Trace.WriteLine(zzz[0]);
         }
 
         public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave);
@@ -186,6 +188,9 @@ namespace HellcardSaveManager
         private SavedGame _currentSave;
 
         public DirectoryInfo BackupFolder { get; set; }
+
+        public DirectoryInfo demoDirInfo { get; set; }
+
 
         public ObservableCollection<SavedGame> Backups { get; } = new ObservableCollection<SavedGame>();
     }
