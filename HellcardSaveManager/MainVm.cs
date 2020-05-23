@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
+using System.Windows;
 
 namespace HellcardSaveManager
 {
@@ -131,7 +132,7 @@ namespace HellcardSaveManager
 
         private void SendLogs()
         {
-            System.Windows.MessageBox.Show("Please send the HELLCARD_Demo_lox.txt at support@thingtrunk.com.\nIf you press OK the right folder will open and you just have to copy-paste the file.", "Send Logs");
+            MessageBox.Show("Please send the HELLCARD_Demo_lox.txt at support@thingtrunk.com.\nIf you press OK the right folder will open and you just have to copy-paste the file.", "Send Logs");
             Process.Start(@Directory.GetDirectories(demoDirInfo.FullName)[0]);
         }
 
@@ -139,7 +140,12 @@ namespace HellcardSaveManager
 
         private void DeleteMainSave()
         {
-            CurrentSave.Location.Delete();
+            MessageBoxResult result = MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                CurrentSave.Location.Delete();
+            }
+
         }
 
         public ICommand CreateBackupCommand => new DelegateCommand(CreateBackup);
