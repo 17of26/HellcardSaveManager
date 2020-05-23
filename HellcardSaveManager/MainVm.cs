@@ -44,8 +44,6 @@ namespace HellcardSaveManager
 
             var saveFileInfo = demoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
 
-            Trace.WriteLine(saveFileInfo?.Exists);
-
             if (saveFileInfo?.Exists != true) 
                 return;
 
