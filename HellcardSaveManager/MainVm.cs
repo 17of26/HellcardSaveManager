@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 
 namespace HellcardSaveManager
@@ -130,8 +131,8 @@ namespace HellcardSaveManager
 
         private void SendLogs()
         {
+            System.Windows.MessageBox.Show("Please send the HELLCARD_Demo_lox.txt at support@thingtrunk.com.\nIf you press OK the right folder will open and you just have to copy-paste the file.", "Send Logs");
             Process.Start(@Directory.GetDirectories(demoDirInfo.FullName)[0]);
-            System.Windows.MessageBox.Show("Please send the HELLCARD_Demo_lox.txt at support@thingtrunk.com", "Send Logs");
         }
 
         public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave);
