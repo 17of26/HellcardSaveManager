@@ -44,6 +44,8 @@ namespace HellcardSaveManager
 
             var saveFileInfo = demoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
 
+            Trace.WriteLine(saveFileInfo?.Exists);
+
             if (saveFileInfo?.Exists != true) 
                 return;
 
@@ -143,6 +145,7 @@ namespace HellcardSaveManager
             if (MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 CurrentSave.Location.Delete();
+                MessageBox.Show("Deletion Successfull");
             }
 
         }
