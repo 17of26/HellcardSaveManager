@@ -140,8 +140,7 @@ namespace HellcardSaveManager
 
         private void DeleteMainSave()
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 CurrentSave.Location.Delete();
             }
