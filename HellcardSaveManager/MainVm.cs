@@ -131,8 +131,7 @@ namespace HellcardSaveManager
         private void SendLogs()
         {
             Process.Start(@Directory.GetDirectories(demoDirInfo.FullName)[0]);
-            String[] zzz = Directory.GetDirectories(demoDirInfo.FullName);
-            Trace.WriteLine(zzz[0]);
+            System.Windows.MessageBox.Show("Please send the HELLCARD_Demo_lox.txt at support@thingtrunk.com", "Send Logs");
         }
 
         public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave);
