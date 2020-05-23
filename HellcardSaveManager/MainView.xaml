@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HellcardSaveManager"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MainVm}"
-        Title="Hellcard Save Manager" Height="600" Width="900"
+        Title="Hellcard Save Manager" Height="600" Width="1100"
         Name="Root">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -45,7 +45,7 @@
                         <ColumnDefinition Width="Auto" MinWidth="100" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Warrior" />
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Warrior" ToolTip="{Binding Path=CurrentSave.Warrior.ToolTip}" />
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=CurrentSave.Warrior.Name}" />
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=CurrentSave.Warrior.Floor, StringFormat=Floor {0}}" />
                     <TextBlock Grid.Row="0" Grid.Column="3">
@@ -57,7 +57,7 @@
                         </TextBlock.Text>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Rogue" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Rouge" ToolTip="{Binding Path=CurrentSave.Warrior.ToolTip}" />
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=CurrentSave.Rogue.Name}" />
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=CurrentSave.Rogue.Floor, StringFormat=Floor {0}}" />
                     <TextBlock Grid.Row="1" Grid.Column="3">
@@ -69,7 +69,7 @@
                         </TextBlock.Text>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Mage" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Mage" ToolTip="{Binding Path=CurrentSave.Mage.ToolTip}" />
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=CurrentSave.Mage.Name}" />
                     <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=CurrentSave.Mage.Floor, StringFormat=Floor {0}}" />
                     <TextBlock Grid.Row="2" Grid.Column="3">
@@ -104,7 +104,7 @@
             <DockPanel LastChildFill="True">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolder.FullName}" />
 
-                <ListView Margin="0 10 0 0" ItemsSource="{Binding Path=Backups}">
+                <ListView Margin="0 10 0 0" ItemsSource="{Binding Path=Backups}" SelectionChanged="ListView_SelectionChanged">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Warrior" 

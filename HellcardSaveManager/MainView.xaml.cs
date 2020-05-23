@@ -6,5 +6,10 @@
         {
             InitializeComponent();
         }
+
+        private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
