@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Input;
 using System.Windows;
+using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HellcardSaveManager
 {
@@ -18,6 +20,53 @@ namespace HellcardSaveManager
         public int CurrentHp { get; set; }
         public int MaxHp { get; set; }
         public int CardCount { get; set; }
+        public List<int> Cards { get; set; }
+        public string ToolTip
+        {
+            get
+            {
+                var cardMapping = new Dictionary<int, string>()
+                {
+                    {0x00, "Block"},
+                    {0x01, "Strike"},
+                    {0x02, "Mighty Blow"},
+                    {0x03, "Caltrops"},
+                    {0x04, "Cluster"},
+                    {0x05, "Tactics"},
+                    {0x06, "Whirlwind"},
+                    {0x07, "Sinister Gaze"},
+                    {0x08, "Wild Strike "},
+                    {0x09, "Barricade"},
+                    {0x0A, "Sacrifice"},
+                    {0x0B, "Arrow"},
+                    {0x0C, "Quiver"},
+                    {0x0D, "Finesse"},
+                    {0x0E, "Arrow Rain"},
+                    {0x0F, "Mastery"},
+                    {0x10, "Fortify"},
+                    {0x11, "Cover"},
+                    {0x12, "Knockback"},
+                    {0x13, "Luck"},
+                    {0x14, "Missile"},
+                    {0x15, "Lightning"},
+                    {0x16, "Meditation"},
+                    {0x17, "Armageddon"},
+                    {0x18, "Dark Pact"},
+                    {0x19, "Teleport"},
+                    {0x1A, "Healing Aura"},
+                    {0x1B, "Link"},
+                    {0x1C, "Meteor"}
+                };
+
+                var cardList = "";
+
+                foreach (var card in Cards)
+                {
+                    cardList += ((cardMapping[card]) + "\n");
+                }
+                return cardList.Trim();
+            }
+        }
         public override string ToString()
         {
             return $"{Name}:  Floor {Floor}, {CurrentHp}/{MaxHp}";
@@ -55,7 +104,6 @@ namespace HellcardSaveManager
             {
                 Backups.Add(LoadSavedGame(fileInfo));
             }
-
         }
 
         private SavedGame LoadSavedGame(FileInfo fileInfo)
@@ -107,10 +155,10 @@ namespace HellcardSaveManager
 
             character.CardCount = reader.ReadInt32();
 
-            var cards = new List<int>();
+            character.Cards = new List<int>();
 
             for (var i = 0; i < character.CardCount; ++i)
-                cards.Add(reader.ReadInt32());
+                character.Cards.Add(reader.ReadInt32());
 
             reader.ReadInt32(); // unknown
 
@@ -126,6 +174,17 @@ namespace HellcardSaveManager
                     savedGame.Rogue = character;
                     break;
             }
+        }
+
+        public string CardState(IDictionary<int, string> mapping, int externalState)
+        {
+            return mapping[externalState];
+        }
+
+        private void CreateToolTip(SavedGame game)
+        {
+
+            
         }
 
         public ICommand SendLogsCommand => new DelegateCommand(SendLogs);
