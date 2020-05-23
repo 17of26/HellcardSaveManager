@@ -1,0 +1,15 @@
+C:\Users\Flecki\Downloads\HellcardSaveManager\bin\Debug\HellcardSaveManager.exe.config
+C:\Users\Flecki\Downloads\HellcardSaveManager\bin\Debug\HellcardSaveManager.exe
+C:\Users\Flecki\Downloads\HellcardSaveManager\bin\Debug\HellcardSaveManager.pdb
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager.csprojAssemblyReference.cache
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\MainView.g.cs
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\App.g.cs
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager_MarkupCompile.cache
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager_MarkupCompile.lref
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\MainView.baml
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager.g.resources
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager.Properties.Resources.resources
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager.csproj.GenerateResource.cache
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager.csproj.CoreCompileInputs.cache
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager.exe
+C:\Users\Flecki\Downloads\HellcardSaveManager\obj\Debug\HellcardSaveManager.pdb
