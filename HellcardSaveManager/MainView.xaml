@@ -109,22 +109,18 @@
                                Text="{Binding Path=CurrentSave.Mage.CardString}" />
                 </Grid>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" Grid.Column="2"
+                <UniformGrid HorizontalAlignment="Center" Rows="1">
+                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
                         Content="Create backup" Command="{Binding Path=CreateBackupCommand}" />
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" Grid.Column="1"
+                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
                         Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" Grid.Column="3"
+                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
                         Content="Send Logs" Command="{Binding Path=SendLogsCommand}" />
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" Grid.Column="0" 
+                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10"  
                     Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
-                </Grid>
+                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
+                    Content="Reload" Command="{Binding Path=ReloadCommand}" />
+                </UniformGrid>
             </StackPanel>
         </GroupBox>
 
