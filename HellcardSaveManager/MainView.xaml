@@ -57,7 +57,7 @@
                         </TextBlock.Text>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Rouge" ToolTip="{Binding Path=CurrentSave.Warrior.ToolTip}" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Rogue" ToolTip="{Binding Path=CurrentSave.Warrior.ToolTip}" />
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=CurrentSave.Rogue.Name}" />
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=CurrentSave.Rogue.Floor, StringFormat=Floor {0}}" />
                     <TextBlock Grid.Row="1" Grid.Column="3">
@@ -110,7 +110,7 @@
                             <GridViewColumn Header="Warrior" 
                                             DisplayMemberBinding="{Binding Path=Warrior}">
                             </GridViewColumn>
-                            <GridViewColumn Header="Rogue" DisplayMemberBinding="{Binding Path=Rouge}">
+                            <GridViewColumn Header="Rogue" DisplayMemberBinding="{Binding Path=Rogue}">
                             </GridViewColumn>
                             <GridViewColumn Header="Mage" DisplayMemberBinding="{Binding Path=Mage}">
                             </GridViewColumn>
