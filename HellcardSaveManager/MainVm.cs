@@ -293,6 +293,11 @@ namespace HellcardSaveManager
             return binary;
         }
 
+        public ICommand ReloadCommand => new DelegateCommand(Reload);
+        public void Reload() {
+            CurrentSave = LoadSavedGame(CurrentSave.Location);
+        }
+
 
         public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames);
         public void ChangeNames()
