@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HellcardSaveManager"
         mc:Ignorable="d"
         FontSize="20"
-        Title="Change Names" Height="250" Width="500">
+        Title="Change Names" Height="325" Width="500">
     <Grid>
         <StackPanel>
             <Grid HorizontalAlignment="Stretch" Margin="0 20 0 0">
@@ -52,6 +52,7 @@
             <UniformGrid HorizontalAlignment="Center" Rows="1">
                 <Button Content="Confirm" Padding="10 0 10 0" Margin="40" Click="OKButton"/>
             </UniformGrid>
+            <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="Be careful! This is still experimental, eventhough it seems to work fine. If you exit this window with the cross in the rop right, it does nothing."/> 
         </StackPanel>
 
 
