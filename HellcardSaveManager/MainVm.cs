@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
@@ -196,11 +197,131 @@ namespace HellcardSaveManager
             }
         }
 
+        private byte[] WriteName(byte[] binary, string NewName, Character character)
+        {
+            if (character.Position == 1)
+            {
+                using (var reader = new BinaryReader(new MemoryStream(binary)))
+                {
+                    using (MemoryStream writeStream = new MemoryStream())
+                    {
+                        using (var writer = new BinaryWriter(writeStream))
+                        {
+                            writer.Write(reader.ReadBytes(12));
+                            writer.Write(NewName.Length);
+                            writer.Write(Encoding.ASCII.GetBytes(NewName));
+                            reader.ReadInt32();
+                            reader.ReadBytes(character.Name.Length);
+                            while (reader.BaseStream.Position != reader.BaseStream.Length)
+                            {
+                                writer.Write(reader.ReadByte());
+                            }
+                            character.Name = NewName;
+                            return writeStream.GetBuffer().Take((int)writeStream.Length).ToArray();
+                        }
+                    }
+                }
+            }
+            else if (character.Position == 2)
+            {
+                using (var reader = new BinaryReader(new MemoryStream(binary)))
+                {
+                    using (MemoryStream writeStream = new MemoryStream())
+                    {
+                        using (var writer = new BinaryWriter(writeStream))
+                        {
+                            writer.Write(reader.ReadBytes(12));
+                            var nameLen1 = reader.ReadInt32();
+                            writer.Write(nameLen1);
+                            writer.Write(reader.ReadChars(nameLen1));
+                            writer.Write(reader.ReadBytes(32));
+                            var cardCount1 = reader.ReadInt32();
+                            writer.Write(cardCount1);
+                            writer.Write(reader.ReadBytes(cardCount1 * 4+7));// skippes cards, one int32 and class name
+                            writer.Write(NewName.Length);
+                            writer.Write(Encoding.ASCII.GetBytes(NewName));
+                            reader.ReadInt32();
+                            reader.ReadBytes(character.Name.Length);
+                            while (reader.BaseStream.Position != reader.BaseStream.Length)
+                            {
+                                writer.Write(reader.ReadByte());
+                            }
+                            character.Name = NewName;
+                            return writeStream.GetBuffer().Take((int)writeStream.Length).ToArray();
+                        }
+                    }
+                }
+            }
+            else if (character.Position == 3)
+            {
+                using (var reader = new BinaryReader(new MemoryStream(binary)))
+                {
+                    using (MemoryStream writeStream = new MemoryStream())
+                    {
+                        using (var writer = new BinaryWriter(writeStream))
+                        {
+                            writer.Write(reader.ReadBytes(12));
+                            var nameLen1 = reader.ReadInt32();
+                            writer.Write(nameLen1);
+                            writer.Write(reader.ReadChars(nameLen1));
+                            writer.Write(reader.ReadBytes(32));
+                            var cardCount1 = reader.ReadInt32();
+                            writer.Write(cardCount1);
+                            writer.Write(reader.ReadBytes(cardCount1 * 4 + 7));// skippes cards, one int32 and class name
+                            var nameLen2 = reader.ReadInt32();
+                            writer.Write(nameLen2);
+                            writer.Write(reader.ReadChars(nameLen2));
+                            writer.Write(reader.ReadBytes(32));
+                            var cardCount2 = reader.ReadInt32();
+                            writer.Write(cardCount2);
+                            writer.Write(reader.ReadBytes(cardCount2 * 4 + 7));// skippes cards, one int32 and class name
+
+                            writer.Write(NewName.Length);
+                            writer.Write(Encoding.ASCII.GetBytes(NewName));
+                            reader.ReadInt32();
+                            reader.ReadBytes(character.Name.Length);
+                            while (reader.BaseStream.Position != reader.BaseStream.Length)
+                            {
+                                writer.Write(reader.ReadByte());
+                            }
+                            character.Name = NewName;
+                            return writeStream.GetBuffer().Take((int)writeStream.Length).ToArray();
+                        }
+                    }
+                }
+            }
+            return binary;
+        }
+
+
         public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames);
         public void ChangeNames()
         {
             var binary = File.ReadAllBytes(CurrentSave.Location.FullName);
             Trace.WriteLine(binary[0x0C]);
+            var nameBox = new ChangeNameBox();
+            nameBox.mageBox.Text = CurrentSave.Mage.Name;
+            nameBox.warriorBox.Text = CurrentSave.Warrior.Name;
+            nameBox.rougeBox.Text = CurrentSave.Rogue.Name;
+            if (nameBox.ShowDialog() == true) 
+            {
+                if (nameBox.rougeBox.Text != CurrentSave.Rogue.Name)
+                {
+                    binary = WriteName(binary, nameBox.rougeBox.Text, CurrentSave.Rogue);
+                }
+
+                if (nameBox.mageBox.Text != CurrentSave.Mage.Name)
+                {
+                    binary = WriteName(binary, nameBox.mageBox.Text, CurrentSave.Mage);
+                }
+
+                if (nameBox.warriorBox.Text != CurrentSave.Warrior.Name)
+                {
+                    binary = WriteName(binary, nameBox.warriorBox.Text, CurrentSave.Warrior);                
+                }
+                File.WriteAllBytes(CurrentSave.Location.FullName, binary);
+                CurrentSave = LoadSavedGame(CurrentSave.Location);
+            }
 
 
         }

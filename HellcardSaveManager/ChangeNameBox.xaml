@@ -1,0 +1,60 @@
+﻿<Window x:Class="HellcardSaveManager.ChangeNameBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HellcardSaveManager"
+        mc:Ignorable="d"
+        FontSize="20"
+        Title="Change Names" Height="250" Width="500">
+    <Grid>
+        <StackPanel>
+            <Grid HorizontalAlignment="Stretch" Margin="0 20 0 0">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Current warrior -->
+                <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Warrior" FontWeight="Bold" />
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBox x:Name="warriorBox" />
+                </StackPanel>
+
+                <!-- Current rogue -->
+
+                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Text="Rogue" FontWeight="Bold" />
+
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBox x:Name="rougeBox" />
+                </StackPanel>
+
+                <!-- Current mage -->
+
+                <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Mage" FontWeight="Bold" />
+
+                <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBox x:Name="mageBox" />
+                </StackPanel>
+            </Grid>
+            <UniformGrid HorizontalAlignment="Center" Rows="1">
+                <Button Content="Confirm" Padding="10 0 10 0" Margin="40" Click="OKButton"/>
+            </UniformGrid>
+        </StackPanel>
+
+
+    </Grid>
+    </Window>
+
