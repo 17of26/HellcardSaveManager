@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HellcardSaveManager"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MainVm}"
-        Title="Hellcard Save Manager" Height="600" Width="1100"
+        Title="Hellcard Save Manager" Height="625" Width="1000"
         Name="Root">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -31,6 +31,7 @@
         <GroupBox Grid.Row="0" Header="Current game">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Path=CurrentSave.Location.FullName}" />
+                <TextBlock Text="Hint: You can now see your deck if you hover over the class name" />
 
                 <Grid HorizontalAlignment="Center" Margin="0 20 0 0">
                     <Grid.RowDefinitions>

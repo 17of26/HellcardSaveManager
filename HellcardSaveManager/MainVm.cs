@@ -218,7 +218,6 @@ namespace HellcardSaveManager
                 }
             }
             Process.Start(@Directory.GetDirectories(demoDirInfo.FullName)[0]);
-            //MessageBox.Show("Please send the HELLCARD_Demo_lox.txt to support@thingtrunk.com.\nIf you press OK the right folder will open and you just have to copy-paste the file.", "Send Logs");
 
         }
 
