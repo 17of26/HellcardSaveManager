@@ -115,7 +115,6 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" Grid.Column="2"
                         Content="Create backup" Command="{Binding Path=CreateBackupCommand}" />
@@ -123,6 +122,8 @@
                         Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
                     <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" Grid.Column="3"
                         Content="Send Logs" Command="{Binding Path=SendLogsCommand}" />
+                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" Grid.Column="0" 
+                    Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
                 </Grid>
             </StackPanel>
         </GroupBox>
