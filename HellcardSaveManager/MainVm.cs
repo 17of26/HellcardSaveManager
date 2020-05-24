@@ -85,6 +85,9 @@ namespace HellcardSaveManager
             {0x1B, "Link"},
             {0x1C, "Meteor"}
         };
+
+        public int Position { get; set; }
+
     }
 
     internal class SavedGame
@@ -130,9 +133,9 @@ namespace HellcardSaveManager
                 {
                     reader.ReadBytes(9);
 
-                    ReadCharacter(reader, savedGame);
-                    ReadCharacter(reader, savedGame);
-                    ReadCharacter(reader, savedGame);
+                    ReadCharacter(reader, savedGame, 1);
+                    ReadCharacter(reader, savedGame, 2);
+                    ReadCharacter(reader, savedGame, 3);
                 }
             }
             catch (Exception)
@@ -143,7 +146,7 @@ namespace HellcardSaveManager
             return savedGame;
         }
 
-        private void ReadCharacter(BinaryReader reader, SavedGame savedGame)
+        private void ReadCharacter(BinaryReader reader, SavedGame savedGame, int position)
         {
             var character = new Character();
 
@@ -180,25 +183,26 @@ namespace HellcardSaveManager
             {
                 case "mag":
                     savedGame.Mage = character;
+                    savedGame.Mage.Position = position;
                     break;
                 case "war":
                     savedGame.Warrior = character;
+                    savedGame.Warrior.Position = position;
                     break;
                 case "rog":
                     savedGame.Rogue = character;
+                    savedGame.Rogue.Position = position;
                     break;
             }
         }
 
-        public string CardState(IDictionary<int, string> mapping, int externalState)
+        public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames);
+        public void ChangeNames()
         {
-            return mapping[externalState];
-        }
+            var binary = File.ReadAllBytes(CurrentSave.Location.FullName);
+            Trace.WriteLine(binary[0x0C]);
 
-        private void CreateToolTip(SavedGame game)
-        {
 
-            
         }
 
         public ICommand SendLogsCommand => new DelegateCommand(SendLogs);
