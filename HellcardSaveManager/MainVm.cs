@@ -7,8 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Input;
 using System.Windows;
-using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
 
 namespace HellcardSaveManager
 {
@@ -58,12 +56,31 @@ namespace HellcardSaveManager
                     {0x1C, "Meteor"}
                 };
 
+                var cardSort = new Dictionary<int, int>() // CardID, Count
+                {
+                };
+
                 var cardList = "";
 
                 foreach (var card in Cards)
                 {
-                    cardList += ((cardMapping[card]) + "\n");
+                    if (cardSort.ContainsKey(card))
+                    {
+                        cardSort[card]++;
+                    }
+                    else
+                    {
+                        cardSort[card] = 1;
+                    }
                 }
+
+                foreach (var pair in cardSort)
+                {
+                    cardList += $"{pair.Value} {cardMapping[pair.Key]}\n";
+                }
+
+
+
                 return cardList.Trim();
             }
         }

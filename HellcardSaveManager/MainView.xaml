@@ -110,7 +110,7 @@
                             <GridViewColumn Header="Warrior" 
                                             DisplayMemberBinding="{Binding Path=Warrior}">
                             </GridViewColumn>
-                            <GridViewColumn Header="Rogue" DisplayMemberBinding="{Binding Path=Rogue}">
+                            <GridViewColumn Header="Rogue" DisplayMemberBinding="{Binding Path=Rouge}">
                             </GridViewColumn>
                             <GridViewColumn Header="Mage" DisplayMemberBinding="{Binding Path=Mage}">
                             </GridViewColumn>
