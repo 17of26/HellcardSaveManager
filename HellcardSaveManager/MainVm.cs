@@ -209,6 +209,8 @@ namespace HellcardSaveManager
         {
             if (File.Exists(@BackupFolder.FullName + @"\nomsg.txt") == false) {
                 var msgBox = new MessageCheckBox();
+                msgBox.Owner = Application.Current.MainWindow;
+                msgBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                 if (msgBox.ShowDialog() == true)
                 {
                     if (msgBox.dontShow.IsChecked == true)
