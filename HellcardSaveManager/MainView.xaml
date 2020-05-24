@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HellcardSaveManager"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MainVm}"
-        Title="Hellcard Save Manager" Height="625" Width="1000"
+        Title="Hellcard Save Manager" Height="800" Width="1000"
         Name="Root">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -31,56 +31,82 @@
         <GroupBox Grid.Row="0" Header="Current game">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Path=CurrentSave.Location.FullName}" />
-                <TextBlock Text="Hint: You can now see your deck if you hover over the class name" />
 
-                <Grid HorizontalAlignment="Center" Margin="0 20 0 0">
+                <Grid HorizontalAlignment="Stretch" Margin="0 20 0 0">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Setter Property="Margin" Value="5" />
+                        </Style>
+                    </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="100" />
-                        <ColumnDefinition Width="Auto" MinWidth="100" />
-                        <ColumnDefinition Width="Auto" MinWidth="100" />
-                        <ColumnDefinition Width="Auto" MinWidth="100" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Warrior" ToolTip="{Binding Path=CurrentSave.Warrior.ToolTip}" />
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=CurrentSave.Warrior.Name}" />
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=CurrentSave.Warrior.Floor, StringFormat=Floor {0}}" />
-                    <TextBlock Grid.Row="0" Grid.Column="3">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0}/{1}">
-                                <Binding Path="CurrentSave.Warrior.CurrentHp" />
-                                <Binding Path="CurrentSave.Warrior.MaxHp" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <!-- Current warrior -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Warrior" FontWeight="Bold" />
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Rogue" ToolTip="{Binding Path=CurrentSave.Warrior.ToolTip}" />
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=CurrentSave.Rogue.Name}" />
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=CurrentSave.Rogue.Floor, StringFormat=Floor {0}}" />
-                    <TextBlock Grid.Row="1" Grid.Column="3">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0}/{1}">
-                                <Binding Path="CurrentSave.Rogue.CurrentHp" />
-                                <Binding Path="CurrentSave.Rogue.MaxHp" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding Path=CurrentSave.Warrior.Name}" FontStyle="Italic" />
+                        <TextBlock Text="{Binding Path=CurrentSave.Warrior.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                        <TextBlock FontStyle="Italic">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}/{1}">
+                                    <Binding Path="CurrentSave.Warrior.CurrentHp" />
+                                    <Binding Path="CurrentSave.Warrior.MaxHp" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Mage" ToolTip="{Binding Path=CurrentSave.Mage.ToolTip}" />
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=CurrentSave.Mage.Name}" />
-                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=CurrentSave.Mage.Floor, StringFormat=Floor {0}}" />
-                    <TextBlock Grid.Row="2" Grid.Column="3">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0}/{1}">
-                                <Binding Path="CurrentSave.Mage.CurrentHp" />
-                                <Binding Path="CurrentSave.Mage.MaxHp" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap"
+                               Text="{Binding Path=CurrentSave.Warrior.CardString}" />
+
+                    <!-- Current rogue -->
+
+                    <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Text="Rogue" FontWeight="Bold" />
+
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding Path=CurrentSave.Rogue.Name}" FontStyle="Italic" />
+                        <TextBlock Text="{Binding Path=CurrentSave.Rogue.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}/{1}">
+                                    <Binding Path="CurrentSave.Rogue.CurrentHp" />
+                                    <Binding Path="CurrentSave.Rogue.MaxHp" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" 
+                               Text="{Binding Path=CurrentSave.Rogue.CardString}" />
+
+                    <!-- Current mage -->
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Mage" FontWeight="Bold" />
+
+                    <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding Path=CurrentSave.Mage.Name}" FontStyle="Italic" />
+                        <TextBlock Text="{Binding Path=CurrentSave.Mage.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}/{1}">
+                                    <Binding Path="CurrentSave.Mage.CurrentHp" />
+                                    <Binding Path="CurrentSave.Mage.MaxHp" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" TextWrapping="Wrap" 
+                               Text="{Binding Path=CurrentSave.Mage.CardString}" />
                 </Grid>
 
                 <Grid>
@@ -105,36 +131,54 @@
             <DockPanel LastChildFill="True">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolder.FullName}" />
 
-                <ListView Margin="0 10 0 0" ItemsSource="{Binding Path=Backups}" SelectionChanged="ListView_SelectionChanged">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Warrior" 
-                                            DisplayMemberBinding="{Binding Path=Warrior}">
-                            </GridViewColumn>
-                            <GridViewColumn Header="Rogue" DisplayMemberBinding="{Binding Path=Rogue}">
-                            </GridViewColumn>
-                            <GridViewColumn Header="Mage" DisplayMemberBinding="{Binding Path=Mage}">
-                            </GridViewColumn>
-                            <GridViewColumn>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <UniformGrid Columns="2">
-                                            <Button Content="Restore" Padding="5" Margin="5"
-                                                    Command="{Binding ElementName=Root, Path=DataContext.RestoreCommand}" CommandParameter="{Binding Path=.}"/>
-                                            <Button Content="Delete" Padding="5" Margin="5" 
-                                                    Command="{Binding ElementName=Root, Path=DataContext.DeleteCommand}" CommandParameter="{Binding Path=.}"/>
-                                        </UniformGrid>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <DataGrid Margin="0 10 0 0" ItemsSource="{Binding Path=Backups}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserReorderColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Warrior" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Path=Warrior}" FontStyle="Italic" />
+                                        <TextBlock Text="{Binding Path=Warrior.CardString}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Rogue" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Path=Rogue}" FontStyle="Italic" />
+                                        <TextBlock Text="{Binding Path=Rogue.CardString}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Mage" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Path=Mage}" FontStyle="Italic" />
+                                        <TextBlock Text="{Binding Path=Mage.CardString}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="2" VerticalAlignment="Center">
+                                        <Button Content="Restore" Padding="5" Margin="5"
+                                                Command="{Binding ElementName=Root, Path=DataContext.RestoreCommand}" CommandParameter="{Binding Path=.}"/>
+                                        <Button Content="Delete" Padding="5" Margin="5" 
+                                                Command="{Binding ElementName=Root, Path=DataContext.DeleteCommand}" CommandParameter="{Binding Path=.}"/>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
-
-            
         </GroupBox>
-
-        
     </Grid>
 </Window>
