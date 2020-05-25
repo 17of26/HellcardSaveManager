@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HellcardSaveManager"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MainVm}"
-        Title="Hellcard Save Manager" Height="800" Width="1000"
+        Title="{Binding Path=Title}" Height="800" Width="1000"
         Name="Root">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -117,16 +117,16 @@
                                Text="{Binding Path=CurrentSave.Mage.CardString}" />
                 </Grid>
 
-                <UniformGrid HorizontalAlignment="Center" Rows="1">
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
+                <UniformGrid  Rows="1">
+                    <Button Padding="5" Margin="20 20 20 10" 
                         Content="Create backup" Command="{Binding Path=CreateBackupCommand}" />
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
+                    <Button Padding="5" Margin="20 20 20 10" 
                         Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
+                    <Button Padding="5" Margin="20 20 20 10" 
                         Content="Send Logs" Command="{Binding Path=SendLogsCommand}" />
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10"  
+                    <Button Padding="5" Margin="20 20 20 10"  
                     Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
-                    <Button HorizontalAlignment="Center" Padding="5" Margin="0 20 0 10" 
+                    <Button Padding="5" Margin="20 20 20 10" 
                     Content="Reload" Command="{Binding Path=ReloadCommand}" />
                 </UniformGrid>
             </StackPanel>

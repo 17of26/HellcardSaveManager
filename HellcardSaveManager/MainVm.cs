@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -102,6 +103,10 @@ namespace HellcardSaveManager
     internal class MainVm : ObservableObject
     {
         private const string _saveName = "demons.save";
+        public string Title
+        {
+            get { return $"Hellcard Save Manager {Assembly.GetExecutingAssembly().GetName().Version}"; }
+        }
 
         public MainVm()
         {
