@@ -348,7 +348,6 @@ namespace HellcardSaveManager
                 }
             }
             Process.Start(@Directory.GetDirectories(DemoDirInfo.FullName)[0]);
-
         }
 
         public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave);
@@ -358,6 +357,8 @@ namespace HellcardSaveManager
             if (MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 CurrentSave.Location.Delete();
+                CurrentSave.Location.Create().Dispose();
+                CurrentSave = LoadSavedGame(CurrentSave.Location);
             }
 
         }
