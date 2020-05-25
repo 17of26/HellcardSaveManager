@@ -118,7 +118,7 @@ namespace HellcardSaveManager
 
             System.IO.Directory.CreateDirectory(BackupFolder.FullName);
 
-            foreach (var fileInfo in BackupFolder.EnumerateFiles())
+            foreach (var fileInfo in BackupFolder.EnumerateFiles("*.save"))
             {
                 Backups.Add(LoadSavedGame(fileInfo));
             }
