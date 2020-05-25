@@ -116,7 +116,7 @@ namespace HellcardSaveManager
 
             CurrentSave = LoadSavedGame(saveFileInfo);
 
-            System.IO.Directory.CreateDirectory(BackupFolder.FullName);
+            BackupFolder.Create();
 
             foreach (var fileInfo in BackupFolder.EnumerateFiles("*.save"))
             {
@@ -299,7 +299,7 @@ namespace HellcardSaveManager
         }
 
 
-        public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames);
+        public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames, SaveButtons_CanExecute);
         public void ChangeNames()
         {
             var binary = File.ReadAllBytes(CurrentSave.Location.FullName);
@@ -331,6 +331,7 @@ namespace HellcardSaveManager
 
         }
 
+
         public ICommand SendLogsCommand => new DelegateCommand(SendLogs);
 
         private void SendLogs()
@@ -350,7 +351,7 @@ namespace HellcardSaveManager
             Process.Start(@Directory.GetDirectories(DemoDirInfo.FullName)[0]);
         }
 
-        public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave);
+        public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave, SaveButtons_CanExecute);
 
         private void DeleteMainSave()
         {
@@ -363,7 +364,8 @@ namespace HellcardSaveManager
 
         }
 
-        public ICommand CreateBackupCommand => new DelegateCommand(CreateBackup);
+
+        public ICommand CreateBackupCommand => new DelegateCommand(CreateBackup, SaveButtons_CanExecute);
 
         private void CreateBackup()
         {
@@ -380,6 +382,12 @@ namespace HellcardSaveManager
             CurrentSave.Location.CopyTo(newFile);
 
             Backups.Insert(0, LoadSavedGame(new FileInfo(newFile)));
+        }
+
+        private bool SaveButtons_CanExecute()
+        {
+            CurrentSave.Location.Refresh();
+            return CurrentSave.Location.Length > 0;
         }
 
         public ICommand RestoreCommand => new DelegateCommand<SavedGame>(Restore);
