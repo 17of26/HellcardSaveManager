@@ -25,10 +25,18 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <GroupBox Grid.Row="0" Header="Current game">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Margin="10 10 10 5" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="DarkOrange" TextAlignment="Center"
+                       Text="NOTICE:  This tool was not created by nor is supported by Thing Trunk, so don't go yelling at them if it breaks your saved games :)" />
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontStyle="Italic" Foreground="DarkOrange"
+                       Text="P.S. This tool may break your saved games, so use at your own risk!" />
+        </StackPanel>
+        
+        <GroupBox Grid.Row="1" Header="Current game">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Path=CurrentSave.Location.FullName}" />
 
@@ -128,7 +136,7 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Row="1" Header="Backups">
+        <GroupBox Grid.Row="2" Header="Backups">
             <DockPanel LastChildFill="True">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolder.FullName}" />
 
