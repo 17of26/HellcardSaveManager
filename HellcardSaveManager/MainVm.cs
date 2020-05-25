@@ -116,8 +116,13 @@ namespace HellcardSaveManager
 
             var saveFileInfo = DemoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
 
-            if (saveFileInfo?.Exists != true) 
-                return;
+            if (saveFileInfo?.Exists != true)
+            {
+                var ccg = DemoDirInfo.EnumerateDirectories("game_bod_ccg", SearchOption.AllDirectories).FirstOrDefault();
+                saveFileInfo = new FileInfo(Path.Combine(ccg.FullName, "slot_0", "demons.save"));
+                saveFileInfo.Create().Dispose();
+            }
+
 
             CurrentSave = LoadSavedGame(saveFileInfo);
 
