@@ -186,7 +186,7 @@
                 </DataGrid>
             </DockPanel>
         </GroupBox>
-        <UniformGrid Grid.Row="3" Rows="1">
+        <UniformGrid Grid.Row="3" Rows="1" Margin="0 0 0 10">
             <TextBlock HorizontalAlignment="Center">           
                 <Hyperlink NavigateUri="http://www.thingtrunk.com" RequestNavigate="Hyperlink_RequestNavigate">
                     Thing Trunk
