@@ -26,8 +26,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical">
@@ -123,8 +123,7 @@
                         Content="Create backup" Command="{Binding Path=CreateBackupCommand}" />
                     <Button Padding="5" Margin="20 20 20 10" 
                         Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
-                    <Button Padding="5" Margin="20 20 20 10" 
-                        Content="Send Logs" Command="{Binding Path=SendLogsCommand}" />
+                    
                     <Button Padding="5" Margin="20 20 20 10"  
                     Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
                     <Button Padding="5" Margin="20 20 20 10" 
@@ -133,7 +132,18 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" Header="Backups">
+        <GroupBox Grid.Row="2" Header="Send Logs">
+            <StackPanel Orientation="Vertical">
+                <UniformGrid Rows="1">
+                    <Button Padding="5" Margin="20 20 20 10" 
+                        Content="Open log folder" Command="{Binding Path=OpenLogFolderCommand}" />
+                    <Button Padding="5" Margin="20 20 20 10" 
+                        Content="Send automatically" Command="{Binding Path=SendLogsSmtpCommand}" />
+                </UniformGrid>
+            </StackPanel>
+        </GroupBox>
+        
+        <GroupBox Grid.Row="3" Header="Backups">
             <DockPanel LastChildFill="True">
                 <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolder.FullName}" />
 
@@ -186,17 +196,5 @@
                 </DataGrid>
             </DockPanel>
         </GroupBox>
-        <UniformGrid Grid.Row="3" Rows="1" Margin="0 0 0 10">
-            <TextBlock HorizontalAlignment="Center">           
-                <Hyperlink NavigateUri="http://www.thingtrunk.com" RequestNavigate="Hyperlink_RequestNavigate">
-                    Thing Trunk
-                </Hyperlink>
-            </TextBlock>
-            <TextBlock HorizontalAlignment="Center">           
-                <Hyperlink NavigateUri="https://docs.google.com/spreadsheets/d/1TDt-MTZSMM5fwNnTGNlCD0o4j2o0soSMB3_AmsUJ-FU" RequestNavigate="Hyperlink_RequestNavigate">
-                    Bug/Suggestion Spreadsheet
-                </Hyperlink>
-            </TextBlock>
-        </UniformGrid>
     </Grid>
 </Window>
