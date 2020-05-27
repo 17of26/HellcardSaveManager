@@ -27,7 +27,7 @@ namespace HellcardSaveManager
         private const string _logFile = "HELLCARD_Demo_log.txt";
         private const string _logsHistory = "logs";
         private const string _processName = "HELLCARD_Demo";
-        private const string _emailTo = "Threnodia@gmx.de"; //"awesomehellcardtool@thingtrunk.com" //change this for developing purposes as to not spam thingtrunk
+        private const string _emailTo = "awesomehellcardtool@thingtrunk.com"; //change this for developing purposes as to not spam thingtrunk
         private const string _emailSubject = "Hellcard Log";
         private const string _smtpClient = "mail.funkfreunde.net"; //please don't abuse!
         private const string _smtpUser = "HellcardCommunityTool@funkfreunde.net";
