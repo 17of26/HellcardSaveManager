@@ -14,7 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using System.IO;
 
 namespace HellcardSaveManager
 {
@@ -35,13 +35,19 @@ namespace HellcardSaveManager
 
         //Properties
         public System.IO.FileInfo Logfile { get; set; }
+        public bool IsSendMinidump { get; set; }
+        public DirectoryInfo GameDir { get; set; }
 
         //constructor
-        public SendLog(string pathLog, bool isSendMinidump)
+        public SendLog(string pathLog, bool isSendMinidump, string gameDir)
         {
             InitializeComponent();
 
             Logfile = new System.IO.FileInfo(System.IO.Path.Combine(pathLog, "HELLCARD_Demo_log.txt"));
+
+            IsSendMinidump = isSendMinidump;
+
+            GameDir = new DirectoryInfo(gameDir);
 
             //Initialize strings
             txtContains.Text = "The email will contain:\n"
@@ -89,6 +95,13 @@ namespace HellcardSaveManager
                 zipFile = System.IO.Path.Combine(Logfile.DirectoryName, "HistLogs_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".zip");
                 ZipFile.CreateFromDirectory(System.IO.Path.Combine(Logfile.DirectoryName, _logsHistory), zipFile);
                 mail.Attachments.Add(new Attachment(zipFile));
+                //minidump file if isSendMinidump
+                if (IsSendMinidump)
+                {
+                    var minidumpInfo = GameDir.EnumerateFiles("*.mdmp", SearchOption.TopDirectoryOnly).LastOrDefault();
+                    mail.Attachments.Add(new Attachment(minidumpInfo.FullName));
+                }
+
 
                 //set server and send mail
                 SmtpClient smtp = new SmtpClient(_smtpClient);
