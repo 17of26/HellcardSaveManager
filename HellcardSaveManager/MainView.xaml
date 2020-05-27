@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HellcardSaveManager"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MainVm}"
-        Title="{Binding Path=Title}" Height="800" Width="1000"
+        Title="{Binding Path=Title}" Height="900" Width="1000"
         Name="Root">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -28,6 +28,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical">
@@ -196,5 +197,19 @@
                 </DataGrid>
             </DockPanel>
         </GroupBox>
+        <UniformGrid Grid.Row="4" Rows="1" Margin="0 0 0 10">
+            <TextBlock HorizontalAlignment="Center">           
+                <Hyperlink NavigateUri="http://www.thingtrunk.com" RequestNavigate="Hyperlink_RequestNavigate">
+                    Thing Trunk
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Center">           
+                <Hyperlink NavigateUri="https://docs.google.com/spreadsheets/d/1TDt-MTZSMM5fwNnTGNlCD0o4j2o0soSMB3_AmsUJ-FU" RequestNavigate="Hyperlink_RequestNavigate">
+                    Bug/Suggestion Spreadsheet
+                </Hyperlink>
+            </TextBlock>
+        </UniformGrid>
+
     </Grid>
+    
 </Window>

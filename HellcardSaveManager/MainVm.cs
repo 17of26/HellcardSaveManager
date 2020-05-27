@@ -85,7 +85,8 @@ namespace HellcardSaveManager
             {0x19, "Teleport"},
             {0x1A, "Healing Aura"},
             {0x1B, "Link"},
-            {0x1C, "Meteor"}
+            {0x1C, "Meteor"},
+            {0x1D, "Initiative" }
         };
 
         public int Position { get; set; }
