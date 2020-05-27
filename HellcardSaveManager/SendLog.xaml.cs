@@ -37,7 +37,7 @@ namespace HellcardSaveManager
         public System.IO.FileInfo Logfile { get; set; }
 
         //constructor
-        public SendLog(string pathLog)
+        public SendLog(string pathLog, bool isSendMinidump)
         {
             InitializeComponent();
 
