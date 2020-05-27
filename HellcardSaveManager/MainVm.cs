@@ -64,8 +64,8 @@ namespace HellcardSaveManager
             {0x04, "Cluster"},
             {0x05, "Tactics"},
             {0x06, "Whirlwind"},
-            {0x07, "Righteous Roar"},
-            {0x08, "Rampage"},
+            {0x07, "Sinister Gaze"},
+            {0x08, "Wild Strike "},
             {0x09, "Barricade"},
             {0x0A, "Sacrifice"},
             {0x0B, "Arrow"},
@@ -85,8 +85,7 @@ namespace HellcardSaveManager
             {0x19, "Teleport"},
             {0x1A, "Healing Aura"},
             {0x1B, "Link"},
-            {0x1C, "Meteor" },
-            {0x1D, "Initiative" }
+            {0x1C, "Meteor"}
         };
 
         public int Position { get; set; }
@@ -111,27 +110,39 @@ namespace HellcardSaveManager
 
         public MainVm()
         {
-            DemoDirInfo = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Prealpha_demo"));
-
-            BackupFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Backups"));
-
-            var saveFileInfo = DemoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
-
-            if (saveFileInfo?.Exists != true)
+            try
             {
-                var ccg = DemoDirInfo.EnumerateDirectories("game_bod_ccg", SearchOption.AllDirectories).FirstOrDefault();
-                saveFileInfo = new FileInfo(Path.Combine(ccg.FullName, "slot_0", "demons.save"));
-                saveFileInfo.Create().Dispose();
+                DemoDirInfo = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Prealpha_demo"));
+
+                BackupFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Backups"));
+
+                var saveFileInfo = DemoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
+
+                if (saveFileInfo?.Exists != true)
+                {
+                    var ccg = DemoDirInfo.EnumerateDirectories("game_bod_ccg", SearchOption.AllDirectories).FirstOrDefault();
+                    saveFileInfo = new FileInfo(Path.Combine(ccg.FullName, "slot_0", "demons.save"));
+                    saveFileInfo.Create().Dispose();
+                }
+
+
+                CurrentSave = LoadSavedGame(saveFileInfo);
+
+                BackupFolder.Create();
+
+                foreach (var fileInfo in BackupFolder.EnumerateFiles("*.save"))
+                {
+                    Backups.Add(LoadSavedGame(fileInfo));
+                }
             }
-
-
-            CurrentSave = LoadSavedGame(saveFileInfo);
-
-            BackupFolder.Create();
-
-            foreach (var fileInfo in BackupFolder.EnumerateFiles("*.save"))
+            catch (Exception ex)
             {
-                Backups.Add(LoadSavedGame(fileInfo));
+                MessageBox.Show("Oh no! Something went very wrong!\n"
+                    + "You probably haven't installed and/or started BoD-Hellcard yet. Go play a bit! :-)\n\n"
+                    + "Otherwise, seek help in the Hellcard Discord Channel and mention following error:\n\n"
+                    + ex.GetType().ToString() + ": " + ex.Message + "\n\n\n"
+                    + "(This tool was not created by nor is supported by Thing Trunk, it's a community project.)", "Error in Startup");
+                Application.Current.Shutdown();
             }
         }
 
@@ -176,7 +187,7 @@ namespace HellcardSaveManager
             character.MaxHp = reader.ReadInt32();
 
             var gold = reader.ReadInt32();
-            
+
             reader.ReadInt32(); // unknown
             reader.ReadInt32(); // unknown
             reader.ReadInt32(); // unknown
@@ -248,7 +259,7 @@ namespace HellcardSaveManager
                             writer.Write(reader.ReadBytes(32));
                             var cardCount1 = reader.ReadInt32();
                             writer.Write(cardCount1);
-                            writer.Write(reader.ReadBytes(cardCount1 * 4+7));// skippes cards, one int32 and class name
+                            writer.Write(reader.ReadBytes(cardCount1 * 4 + 7));// skippes cards, one int32 and class name
                             writer.Write(NewName.Length);
                             writer.Write(Encoding.ASCII.GetBytes(NewName));
                             reader.ReadInt32();
@@ -305,7 +316,8 @@ namespace HellcardSaveManager
         }
 
         public ICommand ReloadCommand => new DelegateCommand(Reload);
-        public void Reload() {
+        public void Reload()
+        {
             CurrentSave = LoadSavedGame(CurrentSave.Location);
         }
 
@@ -319,7 +331,7 @@ namespace HellcardSaveManager
             nameBox.mageBox.Text = CurrentSave.Mage.Name;
             nameBox.warriorBox.Text = CurrentSave.Warrior.Name;
             nameBox.rougeBox.Text = CurrentSave.Rogue.Name;
-            if (nameBox.ShowDialog() == true) 
+            if (nameBox.ShowDialog() == true)
             {
                 if (nameBox.rougeBox.Text != CurrentSave.Rogue.Name)
                 {
@@ -333,7 +345,7 @@ namespace HellcardSaveManager
 
                 if (nameBox.warriorBox.Text != CurrentSave.Warrior.Name)
                 {
-                    binary = WriteName(binary, nameBox.warriorBox.Text, CurrentSave.Warrior);                
+                    binary = WriteName(binary, nameBox.warriorBox.Text, CurrentSave.Warrior);
                 }
                 File.WriteAllBytes(CurrentSave.Location.FullName, binary);
                 CurrentSave = LoadSavedGame(CurrentSave.Location);
@@ -342,12 +354,11 @@ namespace HellcardSaveManager
 
         }
 
-
-        public ICommand SendLogsCommand => new DelegateCommand(SendLogs);
-
-        private void SendLogs()
+        public ICommand OpenLogFolderCommand => new DelegateCommand(OpenLogFolder);
+        private void OpenLogFolder()
         {
-            if (File.Exists(@BackupFolder.FullName + @"\nomsg.txt") == false) {
+            if (File.Exists(@BackupFolder.FullName + @"\nomsg.txt") == false)
+            {
                 var msgBox = new MessageCheckBox();
                 msgBox.Owner = Application.Current.MainWindow;
                 msgBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -355,15 +366,22 @@ namespace HellcardSaveManager
                 {
                     if (msgBox.dontShow.IsChecked == true)
                     {
-                        using (File.Create(@BackupFolder.FullName + @"\nomsg.txt")) { }
+                        using (File.Create(BackupFolder.FullName + @"\nomsg.txt")) { }
                     }
                 }
             }
             Process.Start(@Directory.GetDirectories(DemoDirInfo.FullName)[0]);
         }
 
-        public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave, SaveButtons_CanExecute);
 
+        public ICommand SendLogsSmtpCommand => new DelegateCommand(SendLogsSmtp);
+        private void SendLogsSmtp()
+        {
+            var winSendMail = new SendLog(Directory.GetDirectories(DemoDirInfo.FullName)[0]);
+            winSendMail.Show();
+        }
+
+        public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave, SaveButtons_CanExecute);
         private void DeleteMainSave()
         {
             if (MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo) == MessageBoxResult.Yes)

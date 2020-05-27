@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Send Logs" Height="170" Width="350">
     <StackPanel>
-        <TextBlock TextAlignment="Center"  Padding="5, 10, 5, 5" TextWrapping="Wrap" Text="Please send the HELLCARD_Demo_lox.txt to support@thingtrunk.com. If you press OK the right folder will open and you just have to copy-paste the file." />
+        <TextBlock TextAlignment="Center"  Padding="5, 10, 5, 5" TextWrapping="Wrap" Text="Please send the HELLCARD_Demo_log.txt to support@thingtrunk.com. If you press OK the right folder will open and you just have to copy-paste the file." />
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
