@@ -129,7 +129,26 @@
                     Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
                     <Button Padding="5" Margin="20 20 20 10" 
                     Content="Reload" Command="{Binding Path=ReloadCommand}" />
+                    <Button Padding="5" Margin="20 20 20 10" 
+                    Content="Watch Hellcard" Command="{Binding Path=WatchCommand}" />
                 </UniformGrid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Watching Status: "/>
+                    <TextBlock>
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Watching Nothing" />
+                                <Setter Property="Foreground" Value="Red" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=IsWatching}" Value="true">
+                                        <Setter Property="Text" Value="Watching Hellcard" />
+                                        <Setter Property="Foreground" Value="Green" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
             </StackPanel>
         </GroupBox>
 
