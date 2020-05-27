@@ -116,7 +116,10 @@ namespace HellcardSaveManager
                 DemoDirInfo = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Prealpha_demo"));
 
                 BackupFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Backups"));
-                Trace.WriteLine("asdfasdfasdf");
+
+                var logOutput = File.ReadLines(Directory.GetDirectories(DemoDirInfo.FullName)[0] + @"\betalog.txt").FirstOrDefault(line => line.Contains("dir = ")).TrimEnd('.');
+                var gameDir = logOutput.Substring(logOutput.IndexOf('=') + 1).Trim();
+                GameDir = gameDir;
                 IsWatching = false;
 
                 var saveFileInfo = DemoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
@@ -174,11 +177,9 @@ namespace HellcardSaveManager
 
         private void EnableREvents(Process proc)
         {
-            Trace.WriteLine(proc.Id);
             proc.EnableRaisingEvents = true;
             proc.Exited += ProcessEnded;
             IsWatching = true;
-            Trace.WriteLine("asdf");
         }
 
         private void ProcessEnded(object sender, EventArgs e)
@@ -347,13 +348,9 @@ namespace HellcardSaveManager
             System.Diagnostics.Process[] hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
             if (hellcardProcess.Length > 0 == false)
             {
-                var logOutput = File.ReadLines(Directory.GetDirectories(DemoDirInfo.FullName)[0] + @"\betalog.txt").FirstOrDefault(line => line.Contains("dir = ")).TrimEnd('.');
-                var gameDir = logOutput.Substring(logOutput.IndexOf('=') + 1).Trim();
-                Trace.WriteLine(gameDir + "HELLCATD_Demo.exe");
-                Process.Start(gameDir + "HELLCARD_Demo.exe");
+                Process.Start(GameDir + "HELLCARD_Demo.exe");
                 System.Threading.Thread.Sleep(5000);
                 hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
-                Trace.WriteLine(hellcardProcess[0]);
                 EnableREvents(hellcardProcess[0]);
             }
             else
@@ -372,7 +369,6 @@ namespace HellcardSaveManager
         private void ChangeNames()
         {
             var binary = File.ReadAllBytes(CurrentSave.Location.FullName);
-            Trace.WriteLine(binary[0x0C]);
             var nameBox = new ChangeNameBox();
             nameBox.mageBox.Text = CurrentSave.Mage.Name;
             nameBox.warriorBox.Text = CurrentSave.Warrior.Name;
@@ -423,7 +419,7 @@ namespace HellcardSaveManager
         public ICommand SendLogsSmtpCommand => new DelegateCommand(SendLogsSmtp);
         private void SendLogsSmtp()
         {
-            var winSendMail = new SendLog(Directory.GetDirectories(DemoDirInfo.FullName)[0], isSendMinidumps);
+            var winSendMail = new SendLog(Directory.GetDirectories(DemoDirInfo.FullName)[0], isSendMinidumps, GameDir);
             if (winSendMail.ShowDialog() == true)
             {
                 isSendMinidumps = false;
@@ -504,6 +500,7 @@ namespace HellcardSaveManager
         }
         private Boolean _isWatching;
         public Boolean isSendMinidumps { get; set; }
+        public string GameDir { get; set; }
 
     public ObservableCollection<SavedGame> Backups { get; } = new ObservableCollection<SavedGame>();
     }
