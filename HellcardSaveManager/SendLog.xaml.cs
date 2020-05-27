@@ -95,11 +95,16 @@ namespace HellcardSaveManager
                 zipFile = System.IO.Path.Combine(Logfile.DirectoryName, "HistLogs_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".zip");
                 ZipFile.CreateFromDirectory(System.IO.Path.Combine(Logfile.DirectoryName, _logsHistory), zipFile);
                 mail.Attachments.Add(new Attachment(zipFile));
-                //minidump file if isSendMinidump
+                //minidump file if isSendMinidump and try sending a crashdump.dmp
                 if (IsSendMinidump)
                 {
                     var minidumpInfo = GameDir.EnumerateFiles("*.mdmp", SearchOption.TopDirectoryOnly).LastOrDefault();
                     mail.Attachments.Add(new Attachment(minidumpInfo.FullName));
+                    var dumpInfo = GameDir.EnumerateFiles("crashdump.dmp", SearchOption.TopDirectoryOnly).LastOrDefault();
+                    if (dumpInfo != null) 
+                    { 
+                        mail.Attachments.Add(new Attachment(dumpInfo.FullName));
+                    }
                 }
 
 

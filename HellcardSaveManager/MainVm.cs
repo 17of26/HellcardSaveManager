@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -117,9 +118,21 @@ namespace HellcardSaveManager
 
                 BackupFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Backups"));
 
-                var logOutput = File.ReadLines(Directory.GetDirectories(DemoDirInfo.FullName)[0] + @"\betalog.txt").FirstOrDefault(line => line.Contains("dir = ")).TrimEnd('.');
-                var gameDir = logOutput.Substring(logOutput.IndexOf('=') + 1).Trim();
-                GameDir = gameDir;
+                using (var fs = new FileStream((Directory.GetDirectories(DemoDirInfo.FullName)[0] + @"\betalog.txt"), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var sr = new StreamReader(fs, Encoding.Default))
+                {
+                    string betalog = sr.ReadToEnd();
+                    foreach (var line in betalog.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                        if (line.Contains("dir = "))
+                        {
+                            var logOutput = line.TrimEnd('.');
+                            var gameDir = logOutput.Substring(logOutput.IndexOf('=') + 1).Trim();
+                            GameDir = gameDir;
+                            break;
+                        }
+                }
+
+
                 IsWatching = false;
 
                 var saveFileInfo = DemoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
