@@ -55,6 +55,8 @@ namespace HellcardSaveManager
                           + "* Above data\n"
                           + "* Log file " + Logfile.Name + "\n"
                           + "* Historical logs (zip)";
+            if (isSendMinidump)
+            { txtContains.Text += "\n* Dumpfile from crash"; }
         }
 
 
@@ -80,7 +82,7 @@ namespace HellcardSaveManager
                 mail.Subject = _emailSubject;
                 mail.IsBodyHtml = true;
                 mail.Body = "<html>Hello Thing Trunk team,<br/><br/>"
-                    + "this is an automatically created email with log file attached.<br/><br/>"
+                    + "this is an automatically created email with some attachment (might be: log, historical logs, dump file).<br/><br/>"
                     + "User: " + tbxName.Text + "<br/>"
                     + "Other players: " + tbxPartners.Text + "<br/>"
                     + "Issue description:<br/>" + tbxDescription.Text.Replace("\r\n", "<br/>") + "<br/><br/>"
