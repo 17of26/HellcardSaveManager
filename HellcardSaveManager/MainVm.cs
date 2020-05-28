@@ -276,18 +276,19 @@ namespace HellcardSaveManager
         public ICommand WatchCommand => new DelegateCommand(WatchHellcard);
         private void WatchHellcard()
         {
-            System.Diagnostics.Process[] hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
-            if (hellcardProcess.Length > 0 == false)
+            var hellcardProcess = Process.GetProcessesByName("HELLCARD_Demo").FirstOrDefault();
+
+            if (hellcardProcess == null)
             {
                 Process.Start(GameDir + "HELLCARD_Demo.exe");
                 System.Threading.Thread.Sleep(5000);
-                hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
-                EnableREvents(hellcardProcess[0]);
+                hellcardProcess = Process.GetProcessesByName("HELLCARD_Demo").FirstOrDefault();
             }
-            else
-            {
-                EnableREvents(hellcardProcess[0]);
-            }
+
+            if (hellcardProcess == null)
+                return;
+
+            EnableREvents(hellcardProcess);
         }
 
         private void EnableREvents(Process proc)
