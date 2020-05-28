@@ -130,7 +130,7 @@
                     <Button Padding="5" Margin="20 20 20 10" 
                     Content="Reload" Command="{Binding Path=ReloadCommand}" />
                     <Button Padding="5" Margin="20 20 20 10" 
-                    Content="Watch Hellcard" Command="{Binding Path=WatchCommand}" ToolTip="Watch Hellcard for crashes. If Hellcard crashes the automatic mail also includes the dump files from the crash."/>
+                    Content="Watch Hellcard" Command="{Binding Path=WatchCommand}" ToolTip="Watch Hellcard for crashes. If Hellcard crashes the automatic mail also includes the dump files of the crash."/>
                 </UniformGrid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="Watching Status: "/>
