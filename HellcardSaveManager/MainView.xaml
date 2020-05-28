@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HellcardSaveManager"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MainVm}"
-        Title="{Binding Path=Title}" Height="900" Width="1000"
+        Title="{Binding Path=Title}" Height="900" MinWidth="1000" Width="1000"
         Name="Root">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -28,17 +28,62 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical">
+        <Menu Grid.Row="0" FontSize="16" Padding="10 0 0 0">
+            <Menu.Resources>
+                <Style TargetType="MenuItem">
+                    <Setter Property="Padding" Value="5" />
+                </Style>
+            </Menu.Resources>
+            
+            <MenuItem Header="Tools" Margin="0">
+                <MenuItem Header="Open log folder" Command="{Binding Path=OpenLogFolderCommand}" />
+                <MenuItem Header="Send logs automatically" Command="{Binding Path=SendLogsSmtpCommand}" />
+                <Separator />
+                <MenuItem Header="Watch HELLCARD" IsCheckable="True" IsChecked="{Binding Path=IsWatching}"
+                          ToolTip="Watch HELLCARD for crashes. If HELLCARD crashes the automatic mail also includes the dump files of the crash." 
+                          Command="{Binding Path=WatchCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Margin="20 5">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Text" Value="Not watching HELLCARD" />
+                    <Setter Property="Foreground" Value="Red" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsWatching}" Value="true">
+                            <Setter Property="Text" Value="Watching HELLCARD" />
+                            <Setter Property="Foreground" Value="Green" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock Margin="10 5">
+                <Hyperlink NavigateUri="http://www.thingtrunk.com" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="Thing Trunk" />
+                </Hyperlink>
+            </TextBlock>
+
+            <TextBlock Margin="10 5">
+                <Hyperlink  NavigateUri="https://docs.google.com/spreadsheets/d/1TDt-MTZSMM5fwNnTGNlCD0o4j2o0soSMB3_AmsUJ-FU" RequestNavigate="Hyperlink_RequestNavigate">
+                    <TextBlock Text="HELLCARD Bugs/Suggestions" />
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical">
             <TextBlock Margin="10 10 10 5" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="DarkOrange" TextAlignment="Center"
                        Text="NOTICE:  This tool was not created by nor is supported by Thing Trunk, so don't go yelling at them if it breaks your saved games :)" />
             <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" FontStyle="Italic" Foreground="DarkOrange"
                        Text="P.S. This tool may break your saved games, so use at your own risk!" />
         </StackPanel>
         
-        <GroupBox Grid.Row="1" Header="Current game">
+        <GroupBox Grid.Row="2" Header="Current game">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="{Binding Path=CurrentSave.Location.FullName}" />
 
@@ -121,45 +166,17 @@
 
                 <UniformGrid  Rows="1">
                     <Button Padding="5" Margin="20 20 20 10" 
-                        Content="Create backup" Command="{Binding Path=CreateBackupCommand}" />
+                            Content="Create backup" Command="{Binding Path=CreateBackupCommand}" />
                     <Button Padding="5" Margin="20 20 20 10" 
-                        Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
+                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
                     
                     <Button Padding="5" Margin="20 20 20 10"  
-                    Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
+                            Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
                     <Button Padding="5" Margin="20 20 20 10" 
-                    Content="Reload" Command="{Binding Path=ReloadCommand}" />
-                    <Button Padding="5" Margin="20 20 20 10" 
-                    Content="Watch Hellcard" Command="{Binding Path=WatchCommand}" ToolTip="Watch Hellcard for crashes. If Hellcard crashes the automatic mail also includes the dump files of the crash."/>
+                            Content="Reload" Command="{Binding Path=ReloadCommand}" />
                 </UniformGrid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Watching Status: "/>
-                    <TextBlock>
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="Watching Nothing" />
-                                <Setter Property="Foreground" Value="Red" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=IsWatching}" Value="true">
-                                        <Setter Property="Text" Value="Watching Hellcard" />
-                                        <Setter Property="Foreground" Value="Green" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </StackPanel>
-            </StackPanel>
-        </GroupBox>
-
-        <GroupBox Grid.Row="2" Header="Send Logs">
-            <StackPanel Orientation="Vertical">
-                <UniformGrid Rows="1">
-                    <Button Padding="5" Margin="20 20 20 10" 
-                        Content="Open log folder" Command="{Binding Path=OpenLogFolderCommand}" />
-                    <Button Padding="5" Margin="20 20 20 10" 
-                        Content="Send automatically" Command="{Binding Path=SendLogsSmtpCommand}" />
-                </UniformGrid>
+                
+                
             </StackPanel>
         </GroupBox>
         
@@ -216,19 +233,6 @@
                 </DataGrid>
             </DockPanel>
         </GroupBox>
-        <UniformGrid Grid.Row="4" Rows="1" Margin="0 0 0 10">
-            <TextBlock HorizontalAlignment="Center">           
-                <Hyperlink NavigateUri="http://www.thingtrunk.com" RequestNavigate="Hyperlink_RequestNavigate">
-                    Thing Trunk
-                </Hyperlink>
-            </TextBlock>
-            <TextBlock HorizontalAlignment="Center">           
-                <Hyperlink NavigateUri="https://docs.google.com/spreadsheets/d/1TDt-MTZSMM5fwNnTGNlCD0o4j2o0soSMB3_AmsUJ-FU" RequestNavigate="Hyperlink_RequestNavigate">
-                    Bug/Suggestion Spreadsheet
-                </Hyperlink>
-            </TextBlock>
-        </UniformGrid>
-
     </Grid>
     
 </Window>
