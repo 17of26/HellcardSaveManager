@@ -28,7 +28,7 @@ namespace HellcardSaveManager
         private const string _logFile = "HELLCARD_Demo_log.txt";
         private const string _logsHistory = "logs";
         private const string _processName = "HELLCARD_Demo";
-        private const string _emailTo = "Threnodia@gmx.de"; //"awesomehellcardtool@thingtrunk.com"; //change this for developing purposes as to not spam thingtrunk
+        private const string _emailTo = "awesomehellcardtool@thingtrunk.com"; //change this for developing purposes as to not spam thingtrunk
         private const string _emailSubject = "Hellcard Log";
         private const string _smtpClient = "mail.funkfreunde.net"; //please don't abuse!
         private const string _smtpUser = "HellcardCommunityTool@funkfreunde.net";
@@ -88,8 +88,9 @@ namespace HellcardSaveManager
             List<bool> lstDeleteAttach = new List<bool>();
 
             //most recent logfile
-            lstAttachments.Add(Logfile.FullName);
-            lstDeleteAttach.Add(false); //don't delete main log file
+            FileInfo logcopy = Logfile.CopyTo(System.IO.Path.Combine( Logfile.DirectoryName, "HELLCARD_Demo_log_Copy.txt"));
+            lstAttachments.Add(logcopy.FullName);
+            lstDeleteAttach.Add(true); //delete copied log file
 
             //historical logfiles
             string zipFile = System.IO.Path.Combine(Logfile.DirectoryName, "HistLogs_" + DateTime.Now.ToString("yyyyMMdd_HHmm") + ".zip");
