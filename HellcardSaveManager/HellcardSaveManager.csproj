@@ -81,6 +81,7 @@
     <Compile Include="SendLog.xaml.cs">
       <DependentUpon>SendLog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SendMail.cs" />
     <Page Include="ChangeNameBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
