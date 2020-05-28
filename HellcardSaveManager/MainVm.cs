@@ -104,11 +104,33 @@ namespace HellcardSaveManager
 
     internal class MainVm : ObservableObject
     {
+        #region const + normal properties
         private const string _saveName = "demons.save";
         public string Title
         {
             get { return $"Hellcard Save Manager {Assembly.GetExecutingAssembly().GetName().Version}"; }
         }
+        public SavedGame CurrentSave
+        {
+            get => _currentSave;
+            set => SetProperty(ref _currentSave, ref value);
+        }
+        private SavedGame _currentSave;
+
+        public DirectoryInfo BackupFolder { get; set; }
+
+        public DirectoryInfo DemoDirInfo { get; set; }
+        public Boolean IsWatching
+        {
+            get => _isWatching;
+            set => SetProperty(ref _isWatching, ref value);
+        }
+        private Boolean _isWatching;
+        public Boolean isSendMinidumps { get; set; }
+        public string GameDir { get; set; }
+
+        public ObservableCollection<SavedGame> Backups { get; } = new ObservableCollection<SavedGame>();
+        #endregion
 
         public MainVm()
         {
@@ -165,6 +187,14 @@ namespace HellcardSaveManager
             }
         }
 
+        #region Initialization + reload infos
+
+        public ICommand ReloadCommand => new DelegateCommand(Reload);
+        private void Reload()
+        {
+            CurrentSave = LoadSavedGame(CurrentSave.Location);
+        }
+
         private SavedGame LoadSavedGame(FileInfo fileInfo)
         {
             var savedGame = new SavedGame { Location = fileInfo };
@@ -186,27 +216,6 @@ namespace HellcardSaveManager
             }
 
             return savedGame;
-        }
-
-        private void EnableREvents(Process proc)
-        {
-            proc.EnableRaisingEvents = true;
-            proc.Exited += ProcessEnded;
-            IsWatching = true;
-        }
-
-        private void ProcessEnded(object sender, EventArgs e)
-        {
-            var proc = sender as Process;
-            if (proc != null)
-            {
-                var rMessage = proc.ExitCode;
-                IsWatching = false;
-                if (rMessage != 0)
-                {
-                    isSendMinidumps = true;
-                }
-            }
         }
 
         private void ReadCharacter(BinaryReader reader, SavedGame savedGame, int position)
@@ -258,6 +267,112 @@ namespace HellcardSaveManager
                     break;
             }
         }
+
+        #endregion
+
+
+        #region Process find, start and event catch
+
+        public ICommand WatchCommand => new DelegateCommand(WatchHellcard);
+        private void WatchHellcard()
+        {
+            System.Diagnostics.Process[] hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
+            if (hellcardProcess.Length > 0 == false)
+            {
+                Process.Start(GameDir + "HELLCARD_Demo.exe");
+                System.Threading.Thread.Sleep(5000);
+                hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
+                EnableREvents(hellcardProcess[0]);
+            }
+            else
+            {
+                EnableREvents(hellcardProcess[0]);
+            }
+        }
+
+        private void EnableREvents(Process proc)
+        {
+            proc.EnableRaisingEvents = true;
+            proc.Exited += ProcessEnded;
+            IsWatching = true;
+        }
+
+        private void ProcessEnded(object sender, EventArgs e)
+        {
+            var proc = sender as Process;
+            if (proc != null)
+            {
+                var rMessage = proc.ExitCode;
+                IsWatching = false;
+                if (rMessage != 0)
+                {
+                    isSendMinidumps = true;
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Backup handling
+
+        public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave, SaveButtons_CanExecute);
+        private void DeleteMainSave()
+        {
+            if (MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                CurrentSave.Location.Delete();
+                CurrentSave.Location.Create().Dispose();
+                CurrentSave = LoadSavedGame(CurrentSave.Location);
+            }
+
+        }
+
+
+        public ICommand CreateBackupCommand => new DelegateCommand(CreateBackup, SaveButtons_CanExecute);
+        private void CreateBackup()
+        {
+            BackupFolder.Create();
+
+            var i = 1;
+            string newFile;
+
+            do
+            {
+                newFile = Path.Combine(BackupFolder.FullName, $"{i++}_{_saveName}");
+            } while (File.Exists(newFile));
+
+            CurrentSave.Location.CopyTo(newFile);
+
+            Backups.Insert(0, LoadSavedGame(new FileInfo(newFile)));
+        }
+
+        private bool SaveButtons_CanExecute()
+        {
+            CurrentSave.Location.Refresh();
+            return CurrentSave.Location.Length > 0;
+        }
+
+        public ICommand RestoreCommand => new DelegateCommand<SavedGame>(Restore);
+        private void Restore(SavedGame game)
+        {
+            game.Location.CopyTo(CurrentSave.Location.FullName, true);
+
+            CurrentSave = LoadSavedGame(CurrentSave.Location);
+        }
+
+        public ICommand DeleteCommand => new DelegateCommand<SavedGame>(Delete);
+        private void Delete(SavedGame game)
+        {
+            Backups.Remove(game);
+
+            game.Location.Delete();
+        }
+
+        #endregion
+
+
+        #region Change character name, open log folder, send email
 
         private byte[] WriteName(byte[] binary, string NewName, Character character)
         {
@@ -355,29 +470,6 @@ namespace HellcardSaveManager
             return binary;
         }
 
-        public ICommand WatchCommand => new DelegateCommand(WatchHellcard);
-        private void WatchHellcard()
-        {
-            System.Diagnostics.Process[] hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
-            if (hellcardProcess.Length > 0 == false)
-            {
-                Process.Start(GameDir + "HELLCARD_Demo.exe");
-                System.Threading.Thread.Sleep(5000);
-                hellcardProcess = System.Diagnostics.Process.GetProcessesByName("HELLCARD_Demo");
-                EnableREvents(hellcardProcess[0]);
-            }
-            else
-            {
-                EnableREvents(hellcardProcess[0]);
-            }
-        }
-        public ICommand ReloadCommand => new DelegateCommand(Reload);
-        private void Reload()
-        {
-            CurrentSave = LoadSavedGame(CurrentSave.Location);
-        }
-
-
         public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames, SaveButtons_CanExecute);
         private void ChangeNames()
         {
@@ -428,7 +520,6 @@ namespace HellcardSaveManager
             Process.Start(Directory.GetDirectories(DemoDirInfo.FullName)[0]);
         }
 
-
         public ICommand SendLogsSmtpCommand => new DelegateCommand(SendLogsSmtp);
         private void SendLogsSmtp()
         {
@@ -439,83 +530,10 @@ namespace HellcardSaveManager
             }
         }
 
-        public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave, SaveButtons_CanExecute);
-        private void DeleteMainSave()
-        {
-            if (MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                CurrentSave.Location.Delete();
-                CurrentSave.Location.Create().Dispose();
-                CurrentSave = LoadSavedGame(CurrentSave.Location);
-            }
-
-        }
+        #endregion
 
 
-        public ICommand CreateBackupCommand => new DelegateCommand(CreateBackup, SaveButtons_CanExecute);
 
-        private void CreateBackup()
-        {
-            BackupFolder.Create();
-
-            var i = 1;
-            string newFile;
-
-            do
-            {
-                newFile = Path.Combine(BackupFolder.FullName, $"{i++}_{_saveName}");
-            } while (File.Exists(newFile));
-
-            CurrentSave.Location.CopyTo(newFile);
-
-            Backups.Insert(0, LoadSavedGame(new FileInfo(newFile)));
-        }
-
-        private bool SaveButtons_CanExecute()
-        {
-            CurrentSave.Location.Refresh();
-            return CurrentSave.Location.Length > 0;
-        }
-
-        public ICommand RestoreCommand => new DelegateCommand<SavedGame>(Restore);
-
-        private void Restore(SavedGame game)
-        {
-            game.Location.CopyTo(CurrentSave.Location.FullName, true);
-
-            CurrentSave = LoadSavedGame(CurrentSave.Location);
-        }
-
-        public ICommand DeleteCommand => new DelegateCommand<SavedGame>(Delete);
-
-        private void Delete(SavedGame game)
-        {
-            Backups.Remove(game);
-
-            game.Location.Delete();
-        }
-
-
-        public SavedGame CurrentSave
-        {
-            get => _currentSave;
-            set => SetProperty(ref _currentSave, ref value);
-        }
-        private SavedGame _currentSave;
-
-        public DirectoryInfo BackupFolder { get; set; }
-
-        public DirectoryInfo DemoDirInfo { get; set; }
-        public Boolean IsWatching
-        {
-            get => _isWatching;
-            set => SetProperty(ref _isWatching, ref value);
-        }
-        private Boolean _isWatching;
-        public Boolean isSendMinidumps { get; set; }
-        public string GameDir { get; set; }
-
-    public ObservableCollection<SavedGame> Backups { get; } = new ObservableCollection<SavedGame>();
     }
 }
 
