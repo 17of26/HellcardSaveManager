@@ -375,100 +375,52 @@ namespace HellcardSaveManager
 
         #region Change character name, open log folder, send email
 
-        private byte[] WriteName(byte[] binary, string NewName, Character character)
+        private byte[] WriteName(byte[] binary, string newName, Character character)
         {
-            if (character.Position == 1)
+            using (var reader = new BinaryReader(new MemoryStream(binary)))
             {
-                using (var reader = new BinaryReader(new MemoryStream(binary)))
+                using (MemoryStream writeStream = new MemoryStream())
                 {
-                    using (MemoryStream writeStream = new MemoryStream())
+                    using (var writer = new BinaryWriter(writeStream))
                     {
-                        using (var writer = new BinaryWriter(writeStream))
-                        {
-                            writer.Write(reader.ReadBytes(12));
-                            writer.Write(NewName.Length);
-                            writer.Write(Encoding.ASCII.GetBytes(NewName));
-                            reader.ReadInt32();
-                            reader.ReadBytes(character.Name.Length);
-                            while (reader.BaseStream.Position != reader.BaseStream.Length)
-                            {
-                                writer.Write(reader.ReadByte());
-                            }
-                            character.Name = NewName;
-                            return writeStream.GetBuffer().Take((int)writeStream.Length).ToArray();
+                        writer.Write(reader.ReadBytes(9));
+                        for (var i = character.Position - 1; i > 0; i--)
+                        { 
+                            WriteCharacter(reader, writer);
                         }
-                    }
-                }
-            }
-            else if (character.Position == 2)
-            {
-                using (var reader = new BinaryReader(new MemoryStream(binary)))
-                {
-                    using (MemoryStream writeStream = new MemoryStream())
-                    {
-                        using (var writer = new BinaryWriter(writeStream))
-                        {
-                            writer.Write(reader.ReadBytes(12));
-                            var nameLen1 = reader.ReadInt32();
-                            writer.Write(nameLen1);
-                            writer.Write(reader.ReadChars(nameLen1));
-                            writer.Write(reader.ReadBytes(32));
-                            var cardCount1 = reader.ReadInt32();
-                            writer.Write(cardCount1);
-                            writer.Write(reader.ReadBytes(cardCount1 * 4 + 7));// skippes cards, one int32 and class name
-                            writer.Write(NewName.Length);
-                            writer.Write(Encoding.ASCII.GetBytes(NewName));
-                            reader.ReadInt32();
-                            reader.ReadBytes(character.Name.Length);
-                            while (reader.BaseStream.Position != reader.BaseStream.Length)
-                            {
-                                writer.Write(reader.ReadByte());
-                            }
-                            character.Name = NewName;
-                            return writeStream.GetBuffer().Take((int)writeStream.Length).ToArray();
-                        }
-                    }
-                }
-            }
-            else if (character.Position == 3)
-            {
-                using (var reader = new BinaryReader(new MemoryStream(binary)))
-                {
-                    using (MemoryStream writeStream = new MemoryStream())
-                    {
-                        using (var writer = new BinaryWriter(writeStream))
-                        {
-                            writer.Write(reader.ReadBytes(12));
-                            var nameLen1 = reader.ReadInt32();
-                            writer.Write(nameLen1);
-                            writer.Write(reader.ReadChars(nameLen1));
-                            writer.Write(reader.ReadBytes(32));
-                            var cardCount1 = reader.ReadInt32();
-                            writer.Write(cardCount1);
-                            writer.Write(reader.ReadBytes(cardCount1 * 4 + 7));// skippes cards, one int32 and class name
-                            var nameLen2 = reader.ReadInt32();
-                            writer.Write(nameLen2);
-                            writer.Write(reader.ReadChars(nameLen2));
-                            writer.Write(reader.ReadBytes(32));
-                            var cardCount2 = reader.ReadInt32();
-                            writer.Write(cardCount2);
-                            writer.Write(reader.ReadBytes(cardCount2 * 4 + 7));// skippes cards, one int32 and class name
+                        WriteCharAndName(reader, writer, newName, character.Name);
+                        character.Name = newName;
+                        return writeStream.GetBuffer().Take((int)writeStream.Length).ToArray();
 
-                            writer.Write(NewName.Length);
-                            writer.Write(Encoding.ASCII.GetBytes(NewName));
-                            reader.ReadInt32();
-                            reader.ReadBytes(character.Name.Length);
-                            while (reader.BaseStream.Position != reader.BaseStream.Length)
-                            {
-                                writer.Write(reader.ReadByte());
-                            }
-                            character.Name = NewName;
-                            return writeStream.GetBuffer().Take((int)writeStream.Length).ToArray();
-                        }
                     }
                 }
             }
-            return binary;
+        }
+
+        private void WriteCharacter(BinaryReader reader, BinaryWriter writer)
+        {
+            writer.Write(reader.ReadChars(3)); //Read Class Name
+            var nameLen = reader.ReadInt32();
+            writer.Write(nameLen);
+            writer.Write(reader.ReadChars(nameLen));
+            writer.Write(reader.ReadBytes(32)); //all stuff between name and cardCount
+            var cardCount = reader.ReadInt32();
+            writer.Write(cardCount);
+            writer.Write(reader.ReadBytes(cardCount * 4));
+            writer.Write(reader.ReadInt32());
+        }
+
+        private void WriteCharAndName(BinaryReader reader, BinaryWriter writer, string newName, string oldName)
+        {
+            writer.Write(reader.ReadChars(3)); // class name
+            writer.Write(newName.Length);
+            writer.Write(Encoding.ASCII.GetBytes(newName));
+            reader.ReadInt32();
+            reader.ReadBytes(oldName.Length);
+            while (reader.BaseStream.Position != reader.BaseStream.Length)
+            {
+                writer.Write(reader.ReadByte());
+            }
         }
 
         public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames, SaveButtons_CanExecute);
