@@ -1,9 +1,34 @@
-﻿using System.Windows;
+﻿using System;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Windows;
 
 namespace HellcardSaveManager
 {
     public partial class App
     {
+        public App()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (!args.Name.Contains("SimpleCrypt"))
+                return null;
+            
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("HellcardSaveManager.Resources.SimpleCrypt.dll"))
+            {
+                if (stream == null) 
+                    return null;
+
+                var assemblyRawBytes = new byte[stream.Length];
+                stream.Read(assemblyRawBytes, 0, assemblyRawBytes.Length);
+                return Assembly.Load(assemblyRawBytes);
+            }
+        }
+
         private void App_Startup(object sender, StartupEventArgs e)
         {
             var window = new MainView {DataContext = new MainVm()};
