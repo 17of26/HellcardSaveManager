@@ -39,7 +39,7 @@
             
             <MenuItem Header="Tools" Margin="0">
                 <MenuItem Header="Open log folder" Command="{Binding Path=OpenLogFolderCommand}" />
-                <MenuItem Header="Send logs automatically" Command="{Binding Path=SendLogsSmtpCommand}" />
+                <MenuItem Header="Send logs" Command="{Binding Path=SendLogsSmtpCommand}" />
                 <Separator />
                 <MenuItem Header="Watch HELLCARD" IsCheckable="True" IsChecked="{Binding Path=IsWatching}"
                           ToolTip="Watch HELLCARD for crashes. If HELLCARD crashes the automatic mail also includes the dump files of the crash." 
