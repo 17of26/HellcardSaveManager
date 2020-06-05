@@ -65,7 +65,7 @@ namespace HellcardSaveManager
             {0x04, "Cluster"},
             {0x05, "Tactics"},
             {0x06, "Whirlwind"},
-            {0x07, "Righteous Roar"},
+            {0x07, "Defiant Roar"},
             {0x08, "Rampage"},
             {0x09, "Barricade"},
             {0x0A, "Sacrifice"},
