@@ -485,6 +485,31 @@ namespace HellcardSaveManager
 
         #endregion
 
+        #region Help Menu Section
+
+        public ICommand ViewHelpCommand => new DelegateCommand(HelpWindow);
+
+        private void HelpWindow()
+        {
+            MessageBox.Show("You can backup your save to have more then 1 character of each class with the buttons in the main panel. You can restore them with the bottom panel.\n\nIf you want to send a log automatically use Tools->Send Logs.\n\nIf you choose the Tools->Watch Hellcard optioin it will listen for Hellcard crashes and attaches a crashdump if you send a mail with Tools->Send Logs", "Help", MessageBoxButton.OK);
+        }
+
+        public ICommand AboutCommand => new DelegateCommand(AboutWindow);
+
+        private void AboutWindow()
+        {
+            MessageBox.Show("This is a save manager and a report tool written by _Q_, Flecki and Essarielle", "About", MessageBoxButton.OK);
+        }
+
+        public ICommand ShowWebsiteCommand => new DelegateCommand<string>(ShowWebsite);
+
+        private void ShowWebsite(string url)
+        {
+            Process.Start(new ProcessStartInfo(url));
+        }
+
+
+        #endregion
 
 
     }
