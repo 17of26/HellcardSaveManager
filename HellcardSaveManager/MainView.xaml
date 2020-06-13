@@ -30,22 +30,41 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0" FontSize="16" Padding="10 0 0 0">
-            <Menu.Resources>
-                <Style TargetType="MenuItem">
-                    <Setter Property="Padding" Value="5" />
-                </Style>
-            </Menu.Resources>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Menu FontSize="16" Padding="10 0 0 0">
+                <Menu.Resources>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Padding" Value="5" />
+                   </Style>
+                </Menu.Resources>
             
-            <MenuItem Header="Tools" Margin="0">
-                <MenuItem Header="Open log folder" Command="{Binding Path=OpenLogFolderCommand}" />
-                <MenuItem Header="Send logs" Command="{Binding Path=SendLogsSmtpCommand}" />
-                <Separator />
-                <MenuItem Header="Watch HELLCARD" IsCheckable="True" IsChecked="{Binding Path=IsWatching}"
-                          ToolTip="Watch HELLCARD for crashes. If HELLCARD crashes the automatic mail also includes the dump files of the crash." 
-                          Command="{Binding Path=WatchCommand}"/>
-            </MenuItem>
-        </Menu>
+                <MenuItem Header="Tools" Margin="0">
+                    <MenuItem Header="Open log folder" Command="{Binding Path=OpenLogFolderCommand}" />
+                    <MenuItem Header="Send logs" Command="{Binding Path=SendLogsSmtpCommand}" />
+                  <Separator />
+                    <MenuItem Header="Watch HELLCARD" IsCheckable="True" IsChecked="{Binding Path=IsWatching}"
+                              ToolTip="Watch HELLCARD for crashes. If HELLCARD crashes the automatic mail also includes the dump files of the crash." 
+                              Command="{Binding Path=WatchCommand}"/>
+               </MenuItem>
+            </Menu>
+
+            <Menu FontSize="16" Padding="0 0 10 0">
+                <Menu.Resources>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Padding" Value="5" />
+                    </Style>
+                </Menu.Resources>
+
+                <MenuItem Header="Help" Margin="0">
+                    <MenuItem Header="Thing Trunk Website" Command="{Binding Path=ShowWebsiteCommand}" CommandParameter="https://thingtrunk.com"/>
+                    <MenuItem Header="Report Bug/Suggestion" Command="{Binding Path=ShowWebsiteCommand}" CommandParameter="https://docs.google.com/spreadsheets/d/1TDt-MTZSMM5fwNnTGNlCD0o4j2o0soSMB3_AmsUJ-FU"/>
+                    <Separator />
+                    <MenuItem Header="View Help" Command="{Binding Path=ViewHelpCommand}" />
+                    <Separator />
+                    <MenuItem Header="About" Command="{Binding Path=AboutCommand}" />
+                </MenuItem>
+            </Menu>
+        </StackPanel>
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Center" Margin="20 5">
             <TextBlock.Style>
@@ -61,20 +80,6 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-            <TextBlock Margin="10 5">
-                <Hyperlink NavigateUri="http://www.thingtrunk.com" RequestNavigate="Hyperlink_RequestNavigate">
-                    <TextBlock Text="Thing Trunk" />
-                </Hyperlink>
-            </TextBlock>
-
-            <TextBlock Margin="10 5">
-                <Hyperlink  NavigateUri="https://docs.google.com/spreadsheets/d/1TDt-MTZSMM5fwNnTGNlCD0o4j2o0soSMB3_AmsUJ-FU" RequestNavigate="Hyperlink_RequestNavigate">
-                    <TextBlock Text="HELLCARD Bugs/Suggestions" />
-                </Hyperlink>
-            </TextBlock>
-        </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Vertical">
             <TextBlock Margin="10 10 10 5" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="DarkOrange" TextAlignment="Center"
