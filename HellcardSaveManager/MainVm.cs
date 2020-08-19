@@ -503,14 +503,14 @@ namespace HellcardSaveManager
 
         private void HelpWindow()
         {
-            MessageBox.Show("You can backup your save to have more then 1 character of each class with the buttons in the main panel. You can restore them with the bottom panel.\n\nIf you want to send a log automatically use Tools->Send Logs.\n\nIf you choose the Tools->Watch Hellcard optioin it will listen for Hellcard crashes and attaches a crashdump if you send a mail with Tools->Send Logs", "Help", MessageBoxButton.OK);
+            MessageBox.Show("If you want to send a log automatically you can do that with the \"Send Logs automatically\" Button (You can also send them manually to support@thingtrunk.com).\n\nIf you choose the \"Watch Hellcard\" option it will listen for Hellcard crashes and attaches a crashdump if you send a mail automatically.\n\n If you'd like to change the charakter names or backup your save because you would like to play more than one charakter of each class, you can do that in the \"Manage saves\" tab of the tool.\n\nIf you need any further help just ask on the BoD discord.", "Help", MessageBoxButton.OK);
         }
 
         public ICommand AboutCommand => new DelegateCommand(AboutWindow);
 
         private void AboutWindow()
         {
-            MessageBox.Show("This is a save manager and a report tool written by _Q_, Flecki and Essarielle", "About", MessageBoxButton.OK);
+            MessageBox.Show("This is a report tool and save manager written by _Q_, Flecki and Essarielle.\nYou can reach them on the BoD discord if you find any bugs or need help.", "About", MessageBoxButton.OK);
         }
 
         public ICommand ShowWebsiteCommand => new DelegateCommand<string>(ShowWebsite);
