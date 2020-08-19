@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -128,6 +129,12 @@ namespace HellcardSaveManager
         private Boolean _isWatching;
         public Boolean isSendMinidumps { get; set; }
         public string GameDir { get; set; }
+        public int ExitCode
+        {
+            get =>_exitCode;
+            set => SetProperty(ref _exitCode, ref value);
+        }
+        private int _exitCode;
 
         public ObservableCollection<SavedGame> Backups { get; } = new ObservableCollection<SavedGame>();
         #endregion
@@ -156,6 +163,7 @@ namespace HellcardSaveManager
 
 
                 IsWatching = false;
+                ExitCode = int.MaxValue;
 
                 var saveFileInfo = DemoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
 
@@ -303,14 +311,18 @@ namespace HellcardSaveManager
             var proc = sender as Process;
             if (proc != null)
             {
-                var rMessage = proc.ExitCode;
+                ExitCode = proc.ExitCode; 
                 IsWatching = false;
-                if (rMessage != 0)
+                if (ExitCode != 0)
                 {
                     isSendMinidumps = true;
                 }
             }
         }
+
+
+
+
 
         #endregion
 
