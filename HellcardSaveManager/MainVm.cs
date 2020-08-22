@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
 namespace HellcardSaveManager
 {
+    public enum SaveType
+    {
+        [Description("SP")]
+        SP,
+        [Description("MP")]
+        MP
+    }
     internal class Character
     {
         public string Name { get; set; } = "";
@@ -101,6 +107,8 @@ namespace HellcardSaveManager
         public Character Mage { get; set; }
         public Character Warrior { get; set; }
         public Character Rogue { get; set; }
+        public SaveType SaveType { get; set; }
+
     }
 
     internal class MainVm : ObservableObject
@@ -206,6 +214,7 @@ namespace HellcardSaveManager
         private SavedGame LoadSavedGame(FileInfo fileInfo)
         {
             var savedGame = new SavedGame { Location = fileInfo };
+            savedGame.SaveType = SaveType.MP; //TODO implement check
 
             try
             {
