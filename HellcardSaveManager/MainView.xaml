@@ -130,6 +130,8 @@
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Path=CurrentSave.Location.FullName}" />
 
+                            <TextBlock HorizontalAlignment="Center" Text="{Binding Path=CurrentSave.SaveType, StringFormat='Current save type: {0}'}" />
+
                             <Grid HorizontalAlignment="Stretch" Margin="0 20 0 0">
                                 <Grid.Resources>
                                     <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -257,6 +259,13 @@
                                                     <TextBlock Text="{Binding Path=Mage}" FontStyle="Italic" />
                                                     <TextBlock Text="{Binding Path=Mage.CardString}" TextWrapping="Wrap" />
                                                 </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Save Type" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=SaveType}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
