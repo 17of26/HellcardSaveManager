@@ -121,7 +121,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Manage saves" Padding="5">
-                <TabControl>
+                <TabControl SelectedIndex="{Binding SelectedInxedSPMP}">
                     <TabItem Header="Singleplayer" Padding="5">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -155,8 +155,8 @@
                                         <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Warrior" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSave.Warrior.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSave.Warrior.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Warrior.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Warrior.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock FontStyle="Italic">
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
@@ -168,15 +168,15 @@
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap"
-                               Text="{Binding Path=CurrentSave.Warrior.CardString}" />
+                               Text="{Binding Path=CurrentSaveSP.Warrior.CardString}" />
 
                                         <!-- Current rogue -->
 
                                         <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Text="Rogue" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSave.Rogue.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSave.Rogue.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Rogue.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Rogue.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock>
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
@@ -188,15 +188,15 @@
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" 
-                               Text="{Binding Path=CurrentSave.Rogue.CardString}" />
+                               Text="{Binding Path=CurrentSaveSP.Rogue.CardString}" />
 
                                         <!-- Current mage -->
 
                                         <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Mage" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSave.Mage.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSave.Mage.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Mage.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Mage.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock>
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
@@ -208,7 +208,7 @@
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" TextWrapping="Wrap" 
-                               Text="{Binding Path=CurrentSave.Mage.CardString}" />
+                               Text="{Binding Path=CurrentSaveSP.Mage.CardString}" />
                                     </Grid>
 
                                     <UniformGrid  Rows="1">
@@ -219,10 +219,18 @@
                                             </Button.CommandParameter>
                                         </Button>
                                         <Button Padding="5" Margin="20 20 20 10" 
-                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
+                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}">
+                                            <Button.CommandParameter>
+                                                <s:Boolean>True</s:Boolean>
+                                            </Button.CommandParameter>
+                                        </Button>
 
                                         <Button Padding="5" Margin="20 20 20 10"  
-                            Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
+                            Content="Change Names" Command="{Binding Path=ChangeNamesCommand}">
+                                            <Button.CommandParameter>
+                                                <s:Boolean>True</s:Boolean>
+                                            </Button.CommandParameter>
+                                        </Button>
                                         <Button Padding="5" Margin="20 20 20 10" 
                             Content="Reload" Command="{Binding Path=ReloadCommand}" />
                                     </UniformGrid>
@@ -392,10 +400,18 @@
                                             </Button.CommandParameter>
                                         </Button>
                                         <Button Padding="5" Margin="20 20 20 10" 
-                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}" />
+                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}">
+                                            <Button.CommandParameter>
+                                                <s:Boolean>False</s:Boolean>
+                                            </Button.CommandParameter>
+                                        </Button>
 
                                         <Button Padding="5" Margin="20 20 20 10"  
-                            Content="Change Names" Command="{Binding Path=ChangeNamesCommand}" />
+                            Content="Change Names" Command="{Binding Path=ChangeNamesCommand}">
+                                            <Button.CommandParameter>
+                                                <s:Boolean>True</s:Boolean>
+                                            </Button.CommandParameter>
+                                        </Button>
                                         <Button Padding="5" Margin="20 20 20 10" 
                             Content="Reload" Command="{Binding Path=ReloadCommand}" />
                                     </UniformGrid>
