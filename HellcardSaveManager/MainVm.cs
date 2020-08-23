@@ -137,6 +137,7 @@ namespace HellcardSaveManager
 
         public DirectoryInfo DemoDirInfo { get; set; }
         public DirectoryInfo SPDirInfo { get; set; }
+        public int SelectedInxedSPMP { get; set; }
         public Boolean IsWatching
         {
             get => _isWatching;
@@ -251,6 +252,7 @@ namespace HellcardSaveManager
         private void Reload()
         {
             CurrentSave = LoadSavedGame(CurrentSave.Location, false);
+            CurrentSaveSP = LoadSavedGame(CurrentSaveSP.Location, true);
         }
 
         private SavedGame LoadSavedGame(FileInfo fileInfo, Boolean isSP)
@@ -278,6 +280,7 @@ namespace HellcardSaveManager
                 }
             } else
             {
+                savedGame.SaveType = SaveType.SP;
                 //TODO
             }
 
@@ -349,7 +352,6 @@ namespace HellcardSaveManager
                 hellcardProcess = Process.GetProcessesByName("HELLCARD_Demo_single").FirstOrDefault();
 
             }
-            Trace.WriteLine("testc:" + hellcardProcess == null);
 
             if (hellcardProcess == null)
             {
@@ -391,14 +393,23 @@ namespace HellcardSaveManager
         #region Backup handling
 
 
-        public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave, SaveButtons_CanExecute);
-        private void DeleteMainSave()
+        public ICommand DeleteMainSaveCommand => new DelegateCommand<Boolean>(DeleteMainSave, CreateButton_CanExecute);
+        private void DeleteMainSave(Boolean isSP)
         {
             if (MessageBox.Show("Are you sure that you want to delete your current savegame?", "Delete Save", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                CurrentSave.Location.Delete();
-                CurrentSave.Location.Create().Dispose();
-                CurrentSave = LoadSavedGame(CurrentSave.Location, false);
+                if (isSP)
+                {
+                    CurrentSaveSP.Location.Delete();
+                    CurrentSaveSP.Location.Create().Dispose();
+                    CurrentSaveSP = LoadSavedGame(CurrentSave.Location, true);
+                }
+                else
+                {
+                    CurrentSave.Location.Delete();
+                    CurrentSave.Location.Create().Dispose();
+                    CurrentSave = LoadSavedGame(CurrentSave.Location, false);
+                }
             }
 
         }
@@ -449,9 +460,25 @@ namespace HellcardSaveManager
         public ICommand RestoreCommand => new DelegateCommand<SavedGame>(Restore);
         private void Restore(SavedGame game)
         {
-            game.Location.CopyTo(CurrentSave.Location.FullName, true);
 
-            CurrentSave = LoadSavedGame(CurrentSave.Location, false);
+            if (SelectedInxedSPMP == 0 && game.SaveType == SaveType.MP || SelectedInxedSPMP == 1 && game.SaveType == SaveType.SP)
+            {
+                MessageBox.Show("Please don't load a singleplayer save into a multiplayer game or the other way around!", "Restore", MessageBoxButton.OK);
+                return;
+            }
+
+            if (game.SaveType == SaveType.MP)
+            {
+
+                game.Location.CopyTo(CurrentSave.Location.FullName, true);
+
+                CurrentSave = LoadSavedGame(CurrentSave.Location, false);
+            } else
+            {
+                game.Location.CopyTo(CurrentSaveSP.Location.FullName, true);
+
+                CurrentSaveSP = LoadSavedGame(CurrentSaveSP.Location, true);
+            }
         }
 
         public ICommand DeleteCommand => new DelegateCommand<SavedGame>(Delete);
@@ -515,11 +542,22 @@ namespace HellcardSaveManager
             }
         }
 
-        public ICommand ChangeNamesCommand => new DelegateCommand(ChangeNames, SaveButtons_CanExecute);
-        private void ChangeNames()
+        public ICommand ChangeNamesCommand => new DelegateCommand<Boolean>(ChangeNames, CreateButton_CanExecute);
+        private void ChangeNames(Boolean isSP)
         {
+
+            if (isSP) { 
+                MessageBox.Show("Sorry, this feature is currently not available for sigleplayer", "Change Names", MessageBoxButton.OK);
+                return;
+            };
+
+
             var binary = File.ReadAllBytes(CurrentSave.Location.FullName);
             var nameBox = new ChangeNameBox();
+
+            nameBox.Owner = Application.Current.MainWindow;
+            nameBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
             nameBox.mageBox.Text = CurrentSave.Mage.Name;
             nameBox.warriorBox.Text = CurrentSave.Warrior.Name;
             nameBox.rougeBox.Text = CurrentSave.Rogue.Name;
@@ -566,6 +604,11 @@ namespace HellcardSaveManager
             }
             
             var spBox = new SPorMP();
+
+            spBox.Owner = Application.Current.MainWindow;
+            spBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+
             if (spBox.ShowDialog() == true)
             {
                 Process.Start(Directory.GetDirectories(SPDirInfo.FullName)[0]);
@@ -582,6 +625,9 @@ namespace HellcardSaveManager
             var dir = Directory.GetDirectories(DemoDirInfo.FullName)[0];
 
             var spBox = new SPorMP();
+
+            spBox.Owner = Application.Current.MainWindow;
+            spBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             if (spBox.ShowDialog() == true)
             {
