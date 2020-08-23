@@ -1,0 +1,39 @@
+﻿<Window x:Class="HellcardSaveManager.SPorMP"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HellcardSaveManager"
+        mc:Ignorable="d"
+        Title="SPorMP" Height="150" Width="700">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
+        <Style TargetType="GroupBox">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Margin" Value="10" />
+        </Style>
+
+    </Window.Resources>
+
+
+
+    <StackPanel>
+        <TextBlock Text="Did you play in Singleplayer or Multiplayer mode?" Margin="20" HorizontalAlignment="Center"/>
+        <UniformGrid>
+            <Button Content="Singleplayer" Margin="10" Click="SPClick"/>
+            <Button Content="Multiplayer" Margin="10" Click="MPClick"/>
+        </UniformGrid>
+    </StackPanel>
+</Window>
