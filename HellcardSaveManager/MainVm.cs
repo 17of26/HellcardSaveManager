@@ -346,13 +346,16 @@ namespace HellcardSaveManager
 
             if (hellcardProcess == null)
             {
-                Process.Start(GameDir + "HELLCARD_Demo.exe");
-                System.Threading.Thread.Sleep(5000);
-                hellcardProcess = Process.GetProcessesByName("HELLCARD_Demo").FirstOrDefault();
+                hellcardProcess = Process.GetProcessesByName("HELLCARD_Demo_single").FirstOrDefault();
+
             }
+            Trace.WriteLine("testc:" + hellcardProcess == null);
 
             if (hellcardProcess == null)
+            {
+                MessageBox.Show("It seems like Hellcard is curently not running.\nPlease start the game and try again!", "Watch Hellcard", MessageBoxButton.OK);
                 return;
+            }
 
             EnableREvents(hellcardProcess);
         }
@@ -576,7 +579,17 @@ namespace HellcardSaveManager
         public ICommand SendLogsSmtpCommand => new DelegateCommand(SendLogsSmtp);
         private void SendLogsSmtp()
         {
-            var winSendMail = new SendLog(Directory.GetDirectories(DemoDirInfo.FullName)[0], isSendMinidumps, GameDir);
+            var dir = Directory.GetDirectories(DemoDirInfo.FullName)[0];
+
+            var spBox = new SPorMP();
+
+            if (spBox.ShowDialog() == true)
+            {
+                dir = Directory.GetDirectories(DemoDirInfo.FullName)[0];
+            }
+
+
+            var winSendMail = new SendLog(dir, isSendMinidumps, GameDir);
             if (winSendMail.ShowDialog() == true)
             {
                 isSendMinidumps = false;
