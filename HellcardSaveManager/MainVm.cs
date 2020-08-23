@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
@@ -125,10 +126,17 @@ namespace HellcardSaveManager
             set => SetProperty(ref _currentSave, ref value);
         }
         private SavedGame _currentSave;
+        public SavedGame CurrentSaveSP
+        {
+            get => _currentSaveSP;
+            set => SetProperty(ref _currentSaveSP, ref value);
+        }
+        private SavedGame _currentSaveSP;
 
         public DirectoryInfo BackupFolder { get; set; }
 
         public DirectoryInfo DemoDirInfo { get; set; }
+        public DirectoryInfo SPDirInfo { get; set; }
         public Boolean IsWatching
         {
             get => _isWatching;
@@ -152,45 +160,51 @@ namespace HellcardSaveManager
             try
             {
                 DemoDirInfo = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Prealpha_demo"));
+                SPDirInfo = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Prealpha_demo_single"));
 
                 BackupFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Backups"));
 
-                using (var fs = new FileStream((Directory.GetDirectories(DemoDirInfo.FullName)[0] + @"\betalog.txt"), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var sr = new StreamReader(fs, Encoding.Default))
+
+                DemoDirInfo.Create();
+                SPDirInfo.Create();
+
+
+                var mpBetaLog = DemoDirInfo.EnumerateFiles("betalog.txt", SearchOption.AllDirectories).FirstOrDefault();
+                var spBetaLog = SPDirInfo.EnumerateFiles("betalog.txt", SearchOption.AllDirectories).FirstOrDefault();
+
+                if (mpBetaLog.Exists)
                 {
-                    string betalog = sr.ReadToEnd();
-                    foreach (var line in betalog.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                        if (line.Contains("dir = "))
-                        {
-                            var logOutput = line.TrimEnd('.');
-                            var gameDir = logOutput.Substring(logOutput.IndexOf('=') + 1).Trim();
-                            GameDir = gameDir;
-                            break;
-                        }
+                    GameDir = GetGameDir(mpBetaLog.FullName);
+                } else if (spBetaLog.Exists)
+                {
+                    GameDir = GetGameDir(spBetaLog.FullName);
                 }
 
-
+                
                 IsWatching = false;
                 ExitCode = int.MaxValue;
 
                 var saveFileInfo = DemoDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
+                var saveFileInfoSP = SPDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
 
-                if (saveFileInfo?.Exists != true)
-                {
-                    var ccg = DemoDirInfo.EnumerateDirectories("game_bod_ccg", SearchOption.AllDirectories).FirstOrDefault();
-                    saveFileInfo = new FileInfo(Path.Combine(ccg.FullName, "slot_0", "demons.save"));
-                    saveFileInfo.Create().Dispose();
-                }
+                saveFileInfo = checkSaveFileInfo(saveFileInfo, DemoDirInfo);
+                saveFileInfoSP = checkSaveFileInfo(saveFileInfoSP, SPDirInfo);
 
-
-                CurrentSave = LoadSavedGame(saveFileInfo);
+                CurrentSave = LoadSavedGame(saveFileInfo, false);
+                CurrentSaveSP = LoadSavedGame(saveFileInfoSP, true);
 
                 BackupFolder.Create();
 
-                foreach (var fileInfo in BackupFolder.EnumerateFiles("*.save"))
+                foreach (var fileInfo in BackupFolder.EnumerateFiles("*.mp.save"))
                 {
-                    Backups.Add(LoadSavedGame(fileInfo));
+                    Backups.Add(LoadSavedGame(fileInfo, false));
                 }
+
+                foreach (var fileInfo in BackupFolder.EnumerateFiles("*.sp.save"))
+                {
+                    Backups.Add(LoadSavedGame(fileInfo, true));
+                }
+
             }
             catch (Exception ex)
             {
@@ -203,33 +217,68 @@ namespace HellcardSaveManager
             }
         }
 
+        private string GetGameDir(string betaLogDir)
+        {
+            using (var fs = new FileStream((betaLogDir), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var sr = new StreamReader(fs, Encoding.Default))
+            {
+                string betalog = sr.ReadToEnd();
+                foreach (var line in betalog.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    if (line.Contains("dir = "))
+                    {
+                        var logOutput = line.TrimEnd('.');
+                        var gameDir = logOutput.Substring(logOutput.IndexOf('=') + 1).Trim();
+                        return gameDir;
+                    }
+            }
+            return null; //if this happpens . . .
+        }
+
+        private FileInfo checkSaveFileInfo(FileInfo saveFileInfo, DirectoryInfo dirInfo)
+        {
+            if (saveFileInfo?.Exists != true)
+            {
+                var ccg = dirInfo.EnumerateDirectories("game_bod_ccg", SearchOption.AllDirectories).FirstOrDefault();
+                saveFileInfo = new FileInfo(Path.Combine(ccg.FullName, "slot_0", "demons.save"));
+                saveFileInfo.Create().Dispose();
+            }
+            return saveFileInfo;
+        }
+
         #region Initialization + reload infos
 
         public ICommand ReloadCommand => new DelegateCommand(Reload);
         private void Reload()
         {
-            CurrentSave = LoadSavedGame(CurrentSave.Location);
+            CurrentSave = LoadSavedGame(CurrentSave.Location, false);
         }
 
-        private SavedGame LoadSavedGame(FileInfo fileInfo)
+        private SavedGame LoadSavedGame(FileInfo fileInfo, Boolean isSP)
         {
             var savedGame = new SavedGame { Location = fileInfo };
-            savedGame.SaveType = SaveType.MP; //TODO implement check
 
-            try
+
+            if (!isSP)
             {
-                using (var reader = new BinaryReader(File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                savedGame.SaveType = SaveType.MP;
+                try
                 {
-                    reader.ReadBytes(9);
+                    using (var reader = new BinaryReader(File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read)))
+                    {
+                        reader.ReadBytes(9);
 
-                    ReadCharacter(reader, savedGame, 1);
-                    ReadCharacter(reader, savedGame, 2);
-                    ReadCharacter(reader, savedGame, 3);
+                        ReadCharacter(reader, savedGame, 1);
+                        ReadCharacter(reader, savedGame, 2);
+                        ReadCharacter(reader, savedGame, 3);
+                    }
                 }
-            }
-            catch (Exception)
+                catch (Exception)
+                {
+                    // Can't really do much if it fails
+                }
+            } else
             {
-                // Can't really do much if it fails
+                //TODO
             }
 
             return savedGame;
@@ -338,6 +387,7 @@ namespace HellcardSaveManager
 
         #region Backup handling
 
+
         public ICommand DeleteMainSaveCommand => new DelegateCommand(DeleteMainSave, SaveButtons_CanExecute);
         private void DeleteMainSave()
         {
@@ -345,34 +395,52 @@ namespace HellcardSaveManager
             {
                 CurrentSave.Location.Delete();
                 CurrentSave.Location.Create().Dispose();
-                CurrentSave = LoadSavedGame(CurrentSave.Location);
+                CurrentSave = LoadSavedGame(CurrentSave.Location, false);
             }
 
         }
 
-
-        public ICommand CreateBackupCommand => new DelegateCommand(CreateBackup, SaveButtons_CanExecute);
-        private void CreateBackup()
+        public ICommand CreateBackupCommand => new DelegateCommand<Boolean>(CreateBackup, CreateButton_CanExecute);
+        private void CreateBackup(Boolean isSP)
         {
             BackupFolder.Create();
 
             var i = 1;
             string newFile;
 
+            var saveType = "mp";
+            if (isSP) { saveType = "sp"; };
+
             do
             {
-                newFile = Path.Combine(BackupFolder.FullName, $"{i++}_{_saveName}");
+                newFile = Path.Combine(BackupFolder.FullName, $"{i++}_{_saveName.Split('.')[0]}.{saveType}.{_saveName.Split('.')[1]}");
             } while (File.Exists(newFile));
 
-            CurrentSave.Location.CopyTo(newFile);
+            if (isSP) { CurrentSaveSP.Location.CopyTo(newFile); }
+            else { CurrentSave.Location.CopyTo(newFile); };
 
-            Backups.Insert(0, LoadSavedGame(new FileInfo(newFile)));
+            Backups.Insert(0, LoadSavedGame(new FileInfo(newFile), isSP));
         }
 
-        private bool SaveButtons_CanExecute()
+
+        private Boolean SaveButtons_CanExecute()
         {
             CurrentSave.Location.Refresh();
             return CurrentSave.Location.Length > 0;
+        }
+
+        private Boolean CreateButton_CanExecute(Boolean isSP)
+        {
+            if (isSP)
+            {
+                CurrentSaveSP.Location.Refresh();
+                return CurrentSaveSP.Location.Length > 0;
+
+            } else
+            {
+                CurrentSave.Location.Refresh();
+                return CurrentSave.Location.Length > 0;
+            }
         }
 
         public ICommand RestoreCommand => new DelegateCommand<SavedGame>(Restore);
@@ -380,7 +448,7 @@ namespace HellcardSaveManager
         {
             game.Location.CopyTo(CurrentSave.Location.FullName, true);
 
-            CurrentSave = LoadSavedGame(CurrentSave.Location);
+            CurrentSave = LoadSavedGame(CurrentSave.Location, false);
         }
 
         public ICommand DeleteCommand => new DelegateCommand<SavedGame>(Delete);
@@ -469,7 +537,7 @@ namespace HellcardSaveManager
                     binary = WriteName(binary, nameBox.warriorBox.Text, CurrentSave.Warrior);
                 }
                 File.WriteAllBytes(CurrentSave.Location.FullName, binary);
-                CurrentSave = LoadSavedGame(CurrentSave.Location);
+                CurrentSave = LoadSavedGame(CurrentSave.Location, false);
             }
 
 
@@ -487,11 +555,22 @@ namespace HellcardSaveManager
                 {
                     if (msgBox.dontShow.IsChecked == true)
                     {
+
                         using (File.Create(BackupFolder.FullName + @"\nomsg.txt")) { }
                     }
                 }
+
             }
-            Process.Start(Directory.GetDirectories(DemoDirInfo.FullName)[0]);
+            
+            var spBox = new SPorMP();
+            if (spBox.ShowDialog() == true)
+            {
+                Process.Start(Directory.GetDirectories(SPDirInfo.FullName)[0]);
+            } else
+            {
+                Process.Start(Directory.GetDirectories(DemoDirInfo.FullName)[0]);
+            }
+
         }
 
         public ICommand SendLogsSmtpCommand => new DelegateCommand(SendLogsSmtp);
