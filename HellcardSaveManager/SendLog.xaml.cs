@@ -12,7 +12,8 @@ namespace HellcardSaveManager
     public partial class SendLog
     {
         //constants
-        private const string _logFile = "HELLCARD_Demo_log.txt";
+        private const string _logFileSP = "HELLCARD_Demo_single_log";
+        private const string _logFileMP = "HELLCARD_Demo_log.txt";
         private const string _logsHistory = "logs";
         private const string _emailTo = "awesomehellcardtool@thingtrunk.com"; //change this for developing purposes as to not spam thingtrunk
         private const string _emailSubject = "Hellcard Log";
@@ -30,7 +31,17 @@ namespace HellcardSaveManager
         {
             InitializeComponent();
 
-            Logfile = new FileInfo(Path.Combine(pathLog, _logFile));
+            Logfile = new FileInfo(Path.Combine(pathLog, _logFileSP));
+
+            if (!Logfile.Exists)
+            {
+                Logfile = new FileInfo(Path.Combine(pathLog, _logFileMP));
+            }
+
+            if (!Logfile.Exists)
+            {
+                return;
+            }
 
             IsSendMinidump = isSendMinidump;
 
