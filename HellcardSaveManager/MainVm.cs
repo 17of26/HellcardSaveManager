@@ -468,7 +468,9 @@ namespace HellcardSaveManager
                     character.Companions[i].Cards.Add(reader.ReadInt32());
                 }
 
-                for (var j = 0; j < (12- (character.CardCount - 10)); j++)
+                var futureCardsLen = reader.ReadInt32();
+
+                for (var j = 0; j < futureCardsLen; j++)
                 {
                     character.Companions[i].FutureCards.Add(reader.ReadInt32());
                 }
