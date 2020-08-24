@@ -212,8 +212,8 @@ namespace HellcardSaveManager
                 var saveFileInfoMP = MPDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
                 var saveFileInfoSP = SPDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
 
-                saveFileInfoMP = checkSaveFileInfo(saveFileInfoMP, MPDirInfo);
-                saveFileInfoSP = checkSaveFileInfo(saveFileInfoSP, SPDirInfo);
+                saveFileInfoMP = CheckSaveFileInfo(saveFileInfoMP, MPDirInfo);
+                saveFileInfoSP = CheckSaveFileInfo(saveFileInfoSP, SPDirInfo);
 
                 CurrentMPSave = LoadMPSavedGame(saveFileInfoMP);
                 CurrentSPSave = LoadSPSavedGame(saveFileInfoSP);
@@ -259,7 +259,7 @@ namespace HellcardSaveManager
             return null; //if this happpens . . .
         }
 
-        private FileInfo checkSaveFileInfo(FileInfo saveFileInfo, DirectoryInfo dirInfo)
+        private FileInfo CheckSaveFileInfo(FileInfo saveFileInfo, DirectoryInfo dirInfo)
         {
             if (saveFileInfo?.Exists != true)
             {
@@ -386,8 +386,6 @@ namespace HellcardSaveManager
 
             var nameLen = reader.ReadInt32();
 
-            Trace.WriteLine(nameLen);
-
             for (var i = 0; i < nameLen; ++i)
                 character.Name += reader.ReadChar();
 
@@ -412,8 +410,6 @@ namespace HellcardSaveManager
 
             character.CompanionCount = reader.ReadInt32();
 
-            Trace.WriteLine("Count: " + character.CompanionCount + "Class: " + character.Class);
-
 
             reader.ReadInt32(); //unknown
 
@@ -423,12 +419,10 @@ namespace HellcardSaveManager
 
                 var companionNameLen = reader.ReadInt32();
 
-                Trace.WriteLine(nameLen);
 
                 for (var j = 0; j < companionNameLen; j++)
                     character.Companions[i].Name += reader.ReadChar();
 
-                Trace.WriteLine(character.Companions[i].Name);
 
                 character.Companions[i].Floor = reader.ReadInt32();
 
@@ -439,16 +433,6 @@ namespace HellcardSaveManager
                 character.Companions[i].CurrentHp = reader.ReadInt32();
                 character.Companions[i].MaxMana = reader.ReadInt32();
                 character.Companions[i].Mana = reader.ReadInt32();
-
-                Trace.WriteLine("Floor: " + character.Companions[i].Floor);
-                Trace.WriteLine("MaxHP: " + character.Companions[i].MaxHp);
-
-                Trace.WriteLine("CurHP: " + character.Companions[i].CurrentHp);
-
-                Trace.WriteLine("MaxMana: " + character.Companions[i].MaxMana);
-
-                Trace.WriteLine("Mana: " + character.Companions[i].Mana);
-
 
 
 
@@ -461,7 +445,6 @@ namespace HellcardSaveManager
 
                 character.Companions[i].CardCount = reader.ReadInt32();
 
-                Trace.WriteLine("lencards:" + character.Companions[i].CardCount);
 
                 for (var j = 0; j < character.Companions[i].CardCount; j++)
                 {
@@ -476,9 +459,7 @@ namespace HellcardSaveManager
                 }
 
 
-                //if (character.CompanionCount == (i+1)) { reader.ReadInt32(); }  //unknown
                 reader.ReadInt32();
-                Trace.WriteLine("testc:" + (character.CompanionCount == (i + 1)));
 
 
             }
@@ -756,7 +737,11 @@ namespace HellcardSaveManager
 
                 writer.Write(reader.ReadBytes(companionCardCount * 4));
 
-                writer.Write(reader.ReadBytes(11 * 4)); //future cards to come
+
+                var futureCardsLen = reader.ReadInt32();
+
+                writer.Write(reader.ReadBytes(futureCardsLen * 4));
+
 
                 writer.Write(reader.ReadInt32());
 
@@ -839,8 +824,8 @@ namespace HellcardSaveManager
                 {
                     binary = WriteSPName(binary, nameBox.warriorBox.Text, CurrentSPSave.Warrior);
                 }
-                File.WriteAllBytes(CurrentMPSave.Location.FullName, binary);
-                CurrentMPSave = LoadMPSavedGame(CurrentMPSave.Location);
+                File.WriteAllBytes(CurrentSPSave.Location.FullName, binary);
+                CurrentSPSave = LoadSPSavedGame(CurrentSPSave.Location);
             }
 
 

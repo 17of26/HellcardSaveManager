@@ -130,9 +130,7 @@
                             </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="Current game">
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Path=CurrentSave.Location.FullName}" />
-
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Path=CurrentSaveSP.SaveType, StringFormat='Current save type: {0}'}" />
+                                    <TextBlock Text="{Binding Path=CurrentSPSave.Location.FullName}" />
 
                                     <Grid HorizontalAlignment="Stretch" Margin="0 20 0 0">
                                         <Grid.Resources>
@@ -141,6 +139,7 @@
                                             </Style>
                                         </Grid.Resources>
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -155,82 +154,78 @@
                                         <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Warrior" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Warrior.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Warrior.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSPSave.Warrior.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSPSave.Warrior.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock FontStyle="Italic">
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                                        <Binding Path="CurrentSave.Warrior.CurrentHp" />
-                                                        <Binding Path="CurrentSave.Warrior.MaxHp" />
+                                                        <Binding Path="CurrentSPSave.Warrior.CurrentHp" />
+                                                        <Binding Path="CurrentSPSave.Warrior.MaxHp" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap"
-                               Text="{Binding Path=CurrentSaveSP.Warrior.CardString}" />
+                               Text="{Binding Path=CurrentSPSave.Warrior.CardString}" />
+
+                                        <Grid Grid.Row="3" Grid.Column="0">
+                                            
+                                            
+                                            
+                                        </Grid>
 
                                         <!-- Current rogue -->
 
                                         <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Text="Rogue" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Rogue.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Rogue.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSPSave.Rogue.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSPSave.Rogue.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock>
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                                        <Binding Path="CurrentSave.Rogue.CurrentHp" />
-                                                        <Binding Path="CurrentSave.Rogue.MaxHp" />
+                                                        <Binding Path="CurrentSPSave.Rogue.CurrentHp" />
+                                                        <Binding Path="CurrentSPSave.Rogue.MaxHp" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" 
-                               Text="{Binding Path=CurrentSaveSP.Rogue.CardString}" />
+                               Text="{Binding Path=CurrentSPSave.Rogue.CardString}" />
 
                                         <!-- Current mage -->
 
                                         <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Mage" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Mage.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSaveSP.Mage.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSPSave.Mage.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentSPSave.Mage.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock>
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                                        <Binding Path="CurrentSave.Mage.CurrentHp" />
-                                                        <Binding Path="CurrentSave.Mage.MaxHp" />
+                                                        <Binding Path="CurrentSPSave.Mage.CurrentHp" />
+                                                        <Binding Path="CurrentSPSave.Mage.MaxHp" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" TextWrapping="Wrap" 
-                               Text="{Binding Path=CurrentSaveSP.Mage.CardString}" />
+                               Text="{Binding Path=CurrentSPSave.Mage.CardString}" />
                                     </Grid>
 
                                     <UniformGrid  Rows="1">
                                         <Button Padding="5" Margin="20 20 20 10" 
-                            Content="Create backup" Command="{Binding Path=CreateBackupCommand}">
-                                            <Button.CommandParameter>
-                                                <s:Boolean>True</s:Boolean>
-                                            </Button.CommandParameter>
-                                        </Button>
+                            Content="Create backup" Command="{Binding Path=CreateBackupCommand}"/>
+
                                         <Button Padding="5" Margin="20 20 20 10" 
-                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}">
-                                            <Button.CommandParameter>
-                                                <s:Boolean>True</s:Boolean>
-                                            </Button.CommandParameter>
-                                        </Button>
+                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}"/>
 
                                         <Button Padding="5" Margin="20 20 20 10"  
-                            Content="Change Names" Command="{Binding Path=ChangeNamesCommand}">
-                                            <Button.CommandParameter>
-                                                <s:Boolean>True</s:Boolean>
-                                            </Button.CommandParameter>
-                                        </Button>
+                            Content="Change Names" Command="{Binding Path=ChangeSPNamesCommand}"/>
+
                                         <Button Padding="5" Margin="20 20 20 10" 
                             Content="Reload" Command="{Binding Path=ReloadCommand}" />
                                     </UniformGrid>
@@ -241,9 +236,9 @@
 
                             <GroupBox Grid.Row="1" Header="Backups">
                                 <DockPanel LastChildFill="True">
-                                    <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolder.FullName}" />
+                                    <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolderSP.FullName}" />
 
-                                    <DataGrid Margin="0 10 0 0" ItemsSource="{Binding Path=Backups}" AutoGenerateColumns="False"
+                                    <DataGrid Margin="0 10 0 0" ItemsSource="{Binding Path=BackupsSP}" AutoGenerateColumns="False"
                           CanUserAddRows="False" CanUserReorderColumns="False">
                                         <DataGrid.Columns>
                                             <DataGridTemplateColumn Header="Warrior" Width="*">
@@ -276,21 +271,14 @@
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Header="Save Type" Width="Auto">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Path=SaveType}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
                                             <DataGridTemplateColumn Width="Auto">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <UniformGrid Columns="2" VerticalAlignment="Center">
                                                             <Button Content="Restore" Padding="5" Margin="5"
-                                                Command="{Binding ElementName=Root, Path=DataContext.RestoreCommand}" CommandParameter="{Binding Path=.}"/>
+                                                Command="{Binding ElementName=Root, Path=DataContext.RestoreSPCommand}" CommandParameter="{Binding Path=.}"/>
                                                             <Button Content="Delete" Padding="5" Margin="5" 
-                                                Command="{Binding ElementName=Root, Path=DataContext.DeleteCommand}" CommandParameter="{Binding Path=.}"/>
+                                                Command="{Binding ElementName=Root, Path=DataContext.DeleteSPCommand}" CommandParameter="{Binding Path=.}"/>
                                                         </UniformGrid>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
@@ -311,9 +299,7 @@
                             </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="Current game">
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding Path=CurrentSave.Location.FullName}" />
-
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Path=CurrentSave.SaveType, StringFormat='Current save type: {0}'}" />
+                                    <TextBlock Text="{Binding Path=CurrentMPSave.Location.FullName}" />
 
                                     <Grid HorizontalAlignment="Stretch" Margin="0 20 0 0">
                                         <Grid.Resources>
@@ -336,82 +322,71 @@
                                         <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Text="Warrior" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSave.Warrior.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSave.Warrior.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentMPSave.Warrior.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentMPSave.Warrior.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock FontStyle="Italic">
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                                        <Binding Path="CurrentSave.Warrior.CurrentHp" />
-                                                        <Binding Path="CurrentSave.Warrior.MaxHp" />
+                                                        <Binding Path="CurrentMPSave.Warrior.CurrentHp" />
+                                                        <Binding Path="CurrentMPSave.Warrior.MaxHp" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap"
-                               Text="{Binding Path=CurrentSave.Warrior.CardString}" />
+                               Text="{Binding Path=CurrentMPSave.Warrior.CardString}" />
 
                                         <!-- Current rogue -->
 
                                         <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Text="Rogue" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSave.Rogue.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSave.Rogue.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentMPSave.Rogue.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentMPSave.Rogue.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock>
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                                        <Binding Path="CurrentSave.Rogue.CurrentHp" />
-                                                        <Binding Path="CurrentSave.Rogue.MaxHp" />
+                                                        <Binding Path="CurrentMPSave.Rogue.CurrentHp" />
+                                                        <Binding Path="CurrentMPSave.Rogue.MaxHp" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" 
-                               Text="{Binding Path=CurrentSave.Rogue.CardString}" />
+                               Text="{Binding Path=CurrentMPSave.Rogue.CardString}" />
 
                                         <!-- Current mage -->
 
                                         <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Mage" FontWeight="Bold" />
 
                                         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding Path=CurrentSave.Mage.Name}" FontStyle="Italic" />
-                                            <TextBlock Text="{Binding Path=CurrentSave.Mage.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentMPSave.Mage.Name}" FontStyle="Italic" />
+                                            <TextBlock Text="{Binding Path=CurrentMPSave.Mage.Floor, StringFormat=Floor {0}}" FontStyle="Italic" />
                                             <TextBlock>
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                                        <Binding Path="CurrentSave.Mage.CurrentHp" />
-                                                        <Binding Path="CurrentSave.Mage.MaxHp" />
+                                                        <Binding Path="CurrentMPSave.Mage.CurrentHp" />
+                                                        <Binding Path="CurrentMPSave.Mage.MaxHp" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
                                         </StackPanel>
 
                                         <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" TextWrapping="Wrap" 
-                               Text="{Binding Path=CurrentSave.Mage.CardString}" />
+                               Text="{Binding Path=CurrentMPSave.Mage.CardString}" />
                                     </Grid>
 
                                     <UniformGrid  Rows="1">
                                         <Button Padding="5" Margin="20 20 20 10" 
-                            Content="Create backup" Command="{Binding Path=CreateBackupCommand}">
-                                            <Button.CommandParameter>
-                                                <s:Boolean>False</s:Boolean>
-                                            </Button.CommandParameter>
-                                        </Button>
+                            Content="Create backup" Command="{Binding Path=CreateBackupCommand}"/>
                                         <Button Padding="5" Margin="20 20 20 10" 
-                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}">
-                                            <Button.CommandParameter>
-                                                <s:Boolean>False</s:Boolean>
-                                            </Button.CommandParameter>
-                                        </Button>
+                            Content="Delete Save" Command="{Binding Path=DeleteMainSaveCommand}"/>
+
 
                                         <Button Padding="5" Margin="20 20 20 10"  
-                            Content="Change Names" Command="{Binding Path=ChangeNamesCommand}">
-                                            <Button.CommandParameter>
-                                                <s:Boolean>True</s:Boolean>
-                                            </Button.CommandParameter>
-                                        </Button>
+                            Content="Change Names" Command="{Binding Path=ChangeMPNamesCommand}"/>
                                         <Button Padding="5" Margin="20 20 20 10" 
                             Content="Reload" Command="{Binding Path=ReloadCommand}" />
                                     </UniformGrid>
@@ -424,7 +399,7 @@
                                 <DockPanel LastChildFill="True">
                                     <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolder.FullName}" />
 
-                                    <DataGrid Margin="0 10 0 0" ItemsSource="{Binding Path=Backups}" AutoGenerateColumns="False"
+                                    <DataGrid Margin="0 10 0 0" ItemsSource="{Binding Path=BackupsMP}" AutoGenerateColumns="False"
                           CanUserAddRows="False" CanUserReorderColumns="False">
                                         <DataGrid.Columns>
                                             <DataGridTemplateColumn Header="Warrior" Width="*">
@@ -457,21 +432,14 @@
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Header="Save Type" Width="Auto">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Path=SaveType}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
                                             <DataGridTemplateColumn Width="Auto">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <UniformGrid Columns="2" VerticalAlignment="Center">
                                                             <Button Content="Restore" Padding="5" Margin="5"
-                                                Command="{Binding ElementName=Root, Path=DataContext.RestoreCommand}" CommandParameter="{Binding Path=.}"/>
+                                                Command="{Binding ElementName=Root, Path=DataContext.RestoreMPCommand}" CommandParameter="{Binding Path=.}"/>
                                                             <Button Content="Delete" Padding="5" Margin="5" 
-                                                Command="{Binding ElementName=Root, Path=DataContext.DeleteCommand}" CommandParameter="{Binding Path=.}"/>
+                                                Command="{Binding ElementName=Root, Path=DataContext.DeleteMPCommand}" CommandParameter="{Binding Path=.}"/>
                                                         </UniformGrid>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
