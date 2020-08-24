@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HellcardSaveManager" xmlns:s="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance local:MainVm}"
-        Title="{Binding Path=Title}" Height="900" MinWidth="1000" Width="1000"
+        Title="{Binding Path=Title}" Height="1000" MinWidth="1000" Width="1000"
         Name="Root">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -142,7 +142,8 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="150" />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
@@ -169,11 +170,35 @@
                                         <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" TextWrapping="Wrap"
                                Text="{Binding Path=CurrentSPSave.Warrior.CardString}" />
 
-                                        <Grid Grid.Row="3" Grid.Column="0">
-                                            
-                                            
-                                            
-                                        </Grid>
+                                        <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="Companions:"/>
+                                        <DockPanel LastChildFill="True" Grid.Row="4">
+                                            <DataGrid ItemsSource="{Binding Path=CurrentSPSave.Warrior.Companions}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserReorderColumns="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Vertical">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Text="{Binding Path=Name}" FontStyle="Italic" Margin="5" />
+                                                                        <TextBlock Text="{Binding Path=Floor, StringFormat=Floor {0}}" FontStyle="Italic" Margin="5" />
+                                                                        <TextBlock FontStyle="Italic" Margin="5">
+                                                                            <TextBlock.Text>
+                                                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                                                    <Binding Path="CurrentHp"/>
+                                                                                    <Binding Path="MaxHp" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                        </TextBlock>
+                                                                    </StackPanel>
+                                                                    <TextBlock Text="{Binding Path=CardString}" TextWrapping="Wrap" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </DockPanel>
 
                                         <!-- Current rogue -->
 
@@ -195,6 +220,36 @@
                                         <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" TextWrapping="Wrap" 
                                Text="{Binding Path=CurrentSPSave.Rogue.CardString}" />
 
+                                        <TextBlock Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" Text="Companions:"/>
+                                        <DockPanel LastChildFill="True" Grid.Row="4" Grid.Column="1">
+                                            <DataGrid ItemsSource="{Binding Path=CurrentSPSave.Rogue.Companions}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserReorderColumns="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Vertical">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Text="{Binding Path=Name}" FontStyle="Italic" Margin="5" />
+                                                                        <TextBlock Text="{Binding Path=Floor, StringFormat=Floor {0}}" FontStyle="Italic" Margin="5" />
+                                                                        <TextBlock FontStyle="Italic" Margin="5">
+                                                                            <TextBlock.Text>
+                                                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                                                    <Binding Path="CurrentHp"/>
+                                                                                    <Binding Path="MaxHp" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                        </TextBlock>
+                                                                    </StackPanel>
+                                                                    <TextBlock Text="{Binding Path=CardString}" TextWrapping="Wrap" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </DockPanel>
+
                                         <!-- Current mage -->
 
                                         <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Mage" FontWeight="Bold" />
@@ -214,6 +269,38 @@
 
                                         <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" TextWrapping="Wrap" 
                                Text="{Binding Path=CurrentSPSave.Mage.CardString}" />
+
+                                        <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" Text="Companions:"/>
+                                        <DockPanel LastChildFill="True" Grid.Row="4" Grid.Column="2">
+                                            <DataGrid ItemsSource="{Binding Path=CurrentSPSave.Mage.Companions}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserReorderColumns="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Vertical">
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Text="{Binding Path=Name}" FontStyle="Italic" Margin="5" />
+                                                                        <TextBlock Text="{Binding Path=Floor, StringFormat=Floor {0}}" FontStyle="Italic" Margin="5" />
+                                                                        <TextBlock FontStyle="Italic" Margin="5">
+                                                                            <TextBlock.Text>
+                                                                                <MultiBinding StringFormat="{}{0}/{1}">
+                                                                                    <Binding Path="CurrentHp"/>
+                                                                                    <Binding Path="MaxHp" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                        </TextBlock>
+                                                                    </StackPanel>
+                                                                    <TextBlock Text="{Binding Path=CardString}" TextWrapping="Wrap" />
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </DockPanel>
+
+
                                     </Grid>
 
                                     <UniformGrid  Rows="1">
@@ -236,7 +323,7 @@
 
                             <GroupBox Grid.Row="1" Header="Backups">
                                 <DockPanel LastChildFill="True">
-                                    <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolderSP.FullName}" />
+                                    <TextBlock DockPanel.Dock="Top" Text="{Binding Path=BackupFolder.FullName}" />
 
                                     <DataGrid Margin="0 10 0 0" ItemsSource="{Binding Path=BackupsSP}" AutoGenerateColumns="False"
                           CanUserAddRows="False" CanUserReorderColumns="False">
