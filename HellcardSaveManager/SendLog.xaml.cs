@@ -12,7 +12,7 @@ namespace HellcardSaveManager
     public partial class SendLog
     {
         //constants
-        private const string _logFileSP = "HELLCARD_Demo_single_log";
+        private const string _logFileSP = "HELLCARD_Demo_single_log.txt";
         private const string _logFileMP = "HELLCARD_Demo_log.txt";
         private const string _logsHistory = "logs";
         private const string _emailTo = "awesomehellcardtool@thingtrunk.com"; //change this for developing purposes as to not spam thingtrunk
