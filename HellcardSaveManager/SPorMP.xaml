@@ -32,8 +32,8 @@
     <StackPanel>
         <TextBlock Text="Did you play in Singleplayer or Multiplayer mode?" Margin="20" HorizontalAlignment="Center"/>
         <UniformGrid>
-            <Button Content="Singleplayer" Margin="10" Click="SPClick"/>
-            <Button Content="Multiplayer" Margin="10" Click="MPClick"/>
+            <Button Content="Singleplayer" Margin="10" Click="SPClick" Name="SPButton"/>
+            <Button Content="Multiplayer" Margin="10" Click="MPClick" Name="MPButton"/>
         </UniformGrid>
     </StackPanel>
 </Window>

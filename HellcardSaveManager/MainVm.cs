@@ -190,33 +190,44 @@ namespace HellcardSaveManager
                 BackupFolder = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "HELLCARD_Backups"));
 
 
+                MPDirInfo.Create();
                 SPDirInfo.Create();
-                SPDirInfo.Create();
 
-
-                var mpBetaLog = SPDirInfo.EnumerateFiles("betalog.txt", SearchOption.AllDirectories).FirstOrDefault();
-                var spBetaLog = SPDirInfo.EnumerateFiles("betalog.txt", SearchOption.AllDirectories).FirstOrDefault();
-
-                if (mpBetaLog.Exists)
+                if (IsDirectoryNotEmpty(SPDirInfo.FullName))
                 {
-                    GameDir = GetGameDir(mpBetaLog.FullName);
-                } else if (spBetaLog.Exists)
-                {
-                    GameDir = GetGameDir(spBetaLog.FullName);
+                    var betalog = SPDirInfo.EnumerateFiles("betalog.txt", SearchOption.AllDirectories).FirstOrDefault();
+                    GameDir = GetGameDir(betalog.FullName);
+                    var saveFileInfo = SPDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
+
+                    saveFileInfo = CheckSaveFileInfo(saveFileInfo, SPDirInfo);
+
+                    CurrentSPSave = LoadSPSavedGame(saveFileInfo);
+
                 }
 
-                
+                if(IsDirectoryNotEmpty(MPDirInfo.FullName))
+                {
+                    var betalog = MPDirInfo.EnumerateFiles("betalog.txt", SearchOption.AllDirectories).FirstOrDefault();
+                    GameDir = GetGameDir(betalog.FullName);
+                    var saveFileInfo = MPDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
+
+                    saveFileInfo = CheckSaveFileInfo(saveFileInfo, MPDirInfo);
+
+                    CurrentMPSave = LoadMPSavedGame(saveFileInfo);
+
+                }
+
+                if (CurrentSPSave == null && CurrentMPSave == null)
+                {
+                    MessageBox.Show("Oh no! Something went very wrong!\n"
+                         + "You probably haven't installed and/or started BoD-Hellcard yet. Go play a bit! :-)\n\n"
+                         + "(This tool was not created by nor is supported by Thing Trunk, it's a community project.)", "Error");
+                    Application.Current.Shutdown();
+                }
+
                 IsWatching = false;
                 ExitCode = int.MaxValue;
 
-                var saveFileInfoMP = MPDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
-                var saveFileInfoSP = SPDirInfo.EnumerateFiles(_saveName, SearchOption.AllDirectories).FirstOrDefault();
-
-                saveFileInfoMP = CheckSaveFileInfo(saveFileInfoMP, MPDirInfo);
-                saveFileInfoSP = CheckSaveFileInfo(saveFileInfoSP, SPDirInfo);
-
-                CurrentMPSave = LoadMPSavedGame(saveFileInfoMP);
-                CurrentSPSave = LoadSPSavedGame(saveFileInfoSP);
 
                 BackupFolder.Create();
 
@@ -240,6 +251,11 @@ namespace HellcardSaveManager
                     + "(This tool was not created by nor is supported by Thing Trunk, it's a community project.)", "Error in Startup");
                 Application.Current.Shutdown();
             }
+        }
+
+        private Boolean IsDirectoryNotEmpty(string path)
+        {
+            return Directory.EnumerateFileSystemEntries(path).Any();
         }
 
         private string GetGameDir(string betaLogDir)
@@ -587,14 +603,22 @@ namespace HellcardSaveManager
         {
             if (SelectedInxedSPMP == 0)
             {
-                CurrentSPSave.Location.Refresh();
-                return CurrentSPSave.Location.Length > 0;
+                if (CurrentSPSave != null)
+                {
+                    CurrentSPSave.Location.Refresh();
+                    return CurrentSPSave.Location.Length > 0;
+                }
+                return false;
 
             }
             else
             {
-                CurrentMPSave.Location.Refresh();
-                return CurrentMPSave.Location.Length > 0;
+                if (CurrentMPSave != null)
+                {
+                    CurrentMPSave.Location.Refresh();
+                    return CurrentMPSave.Location.Length > 0;
+                }
+                return false;
             }
         }
 
@@ -847,22 +871,24 @@ namespace HellcardSaveManager
                         using (File.Create(BackupFolder.FullName + @"\nomsg.txt")) { }
                     }
                 }
+                var spBox = new SPorMP(CurrentSPSave != null, CurrentMPSave != null);
+
+                spBox.Owner = Application.Current.MainWindow;
+                spBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+
+                if (spBox.ShowDialog() == true)
+                {
+                    Process.Start(Directory.GetDirectories(SPDirInfo.FullName)[0]);
+                }
+                else
+                {
+                    Process.Start(Directory.GetDirectories(MPDirInfo.FullName)[0]);
+                }
+
 
             }
-            
-            var spBox = new SPorMP();
 
-            spBox.Owner = Application.Current.MainWindow;
-            spBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
-
-            if (spBox.ShowDialog() == true)
-            {
-                Process.Start(Directory.GetDirectories(SPDirInfo.FullName)[0]);
-            } else
-            {
-                Process.Start(Directory.GetDirectories(MPDirInfo.FullName)[0]);
-            }
 
         }
 
@@ -871,7 +897,7 @@ namespace HellcardSaveManager
         {
             var dir = Directory.GetDirectories(MPDirInfo.FullName)[0];
 
-            var spBox = new SPorMP();
+            var spBox = new SPorMP(CurrentSPSave != null, CurrentMPSave != null);
 
             spBox.Owner = Application.Current.MainWindow;
             spBox.WindowStartupLocation = WindowStartupLocation.CenterOwner;

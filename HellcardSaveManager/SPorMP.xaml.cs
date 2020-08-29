@@ -19,9 +19,12 @@ namespace HellcardSaveManager
     /// </summary>
     public partial class SPorMP : Window
     {
-        public SPorMP()
+        public SPorMP(Boolean spPresent, Boolean mpPresent)
         {
             InitializeComponent();
+            SPButton.IsEnabled = spPresent;
+            MPButton.IsEnabled = mpPresent;
+
         }
 
         private void SPClick(object sender, System.Windows.RoutedEventArgs e)
